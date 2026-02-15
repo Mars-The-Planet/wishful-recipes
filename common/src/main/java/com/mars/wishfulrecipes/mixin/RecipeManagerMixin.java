@@ -6,12 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,6 +26,8 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 @Mixin(RecipeManager.class)
 public abstract class RecipeManagerMixin {
+    @Shadow @Final private HolderLookup.Provider registries;
+
     @Inject(method = "apply*", at = @At("HEAD"))
     private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
         // Key - Raw Metal Item
@@ -38,19 +42,14 @@ public abstract class RecipeManagerMixin {
         // is it ever part of a stonecutting recipe
         Set<String> isStone = new HashSet<>();
 
-        //System.out.println("first loop");
         for (JsonElement recipe : map.values()) {
-            //if (Objects.equals(getResult(recipe), "mekanism:block_raw_uranium"))
-            System.out.println(recipe);
 
             // looking for items in stonecutting recipes
-            //System.out.println("stonecutting");
             if (getIngredients(recipe).length > 0 && blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:stonecutting")) {
                 isStone.addAll(Arrays.asList(getIngredients(recipe)));
             }
 
             // checking whether item has a blasting recipe
-            //System.out.println("blasting");
             if (blasting_raw_metal_blocks_enable && Objects.equals(getType(recipe), "minecraft:blasting")) {
                 String[] ingredients = getIngredients(recipe);
                 if (ingredients.length < 1) continue;
@@ -61,7 +60,6 @@ public abstract class RecipeManagerMixin {
                 }
             }
 
-            //System.out.println("slabs");
             if (hasSlabPattern(recipe)) {
                 String[] keys = getKeys(recipe);
                 String result = getResult(recipe);
@@ -73,7 +71,6 @@ public abstract class RecipeManagerMixin {
             }
 
             // better stairs crafting
-            //System.out.println("stairs");
             if (hasStairsPattern(recipe)) {
                 String[] keys = getKeys(recipe);
                 String result = getResult(recipe);
@@ -96,7 +93,6 @@ public abstract class RecipeManagerMixin {
             }
 
             // walls to blocks
-            //System.out.println("walls");
             if (hasWallPattern(recipe) && walls_to_blocks_enable) {
                 String[] keys = getKeys(recipe);
                 String result = getResult(recipe);
@@ -106,23 +102,19 @@ public abstract class RecipeManagerMixin {
             }
         }
 
-        //System.out.println("second loop");
         // second loop
         for (JsonElement recipe : map.values()) {
-            ////System.out.println(recipe);
             // to check for the rest of metal blasting properties
-            System.out.println("blasting raw 2");
-            if (blasting_raw_metal_blocks_enable && hasFullBlockPattern(recipe)) {
-                System.out.println("????? " + recipe);
+            //System.out.println("blasting raw 2");
+            if (blasting_raw_metal_blocks_enable && (hasFullBlockPattern(recipe) || isMekanismRawBlockPattern(recipe))) {
                 String[] keys = getKeys(recipe);
+                String result = getResult(recipe);
                 if (keys.length < 1) continue;
 
                 for (String key : keys) {
-                    String result = getResult(recipe);
-                    if (key == null || result == null) continue;
+                    if (key == null || result == null /*|| !result.contains("block")*/) continue;
 
                     // for raw metal blocks
-                    ////System.out.println("blasting raw 2.1");
                     if (isRawMetal.containsKey(key)) {
                         String[] items = isRawMetal.get(key);
                         items[2] = result;
@@ -130,7 +122,6 @@ public abstract class RecipeManagerMixin {
                     }
 
                     // for metal blocks
-                    //System.out.println("blasting raw 2.2");
                     for (Map.Entry<String, String[]> entry: isRawMetal.entrySet()) {
                         String[] items = entry.getValue();
                         if (items[1].equals(key)) {
@@ -142,24 +133,18 @@ public abstract class RecipeManagerMixin {
             }
 
 
-            //System.out.println("blasting stone 2");
             if (blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:smelting")) {
-                ////System.out.println("1");
                 if (getIngredients(recipe).length > 0 && isStone.contains(getIngredients(recipe)[0]) || isStone.contains(getResult(recipe))) {
-                    ////System.out.println("2");
                     DeimosRecipeGenerator.createBlastingJson(getIngredients(recipe)[0], Objects.requireNonNull(getResult(recipe)), 100, getExp(recipe));
                 }
             }
         }
 
         // blasting raw metal blocks
-        //System.out.println("blasting raw 3");
         if (blasting_raw_metal_blocks_enable || smelting_raw_metal_blocks_enable) {
             for (String key : isRawMetal.keySet()) {
                 String[] items = isRawMetal.get(key);
-                //System.out.println("blasting ctyrka: " + items[0] + ", " + items[1] + ", " + items[2] + ", " + items[3]);
                 if (Arrays.asList(items).contains("")) continue;
-                System.out.println("blasting ctyrka: " + items[0] + ", " + items[1] + ", " + items[2] + ", " + items[3]);
                 if (blasting_raw_metal_blocks_enable)
                     DeimosRecipeGenerator.createBlastingJson(items[2], items[3], blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
                 if (smelting_raw_metal_blocks_enable)
@@ -238,7 +223,6 @@ public abstract class RecipeManagerMixin {
                     }
                     if (ingObj.has("tag")) {
                         String tagName = ingObj.get("tag").getAsString();
-                        //System.out.println("tagname: " + tagName);
                         List<String> items = itemsInTags.get(tagName);
                         if (items != null)
                             ingredientsList.addAll(items);
@@ -274,7 +258,7 @@ public abstract class RecipeManagerMixin {
 
         JsonObject root = element.getAsJsonObject();
 
-        // Check if the "key" object exists (Shaped recipes usually have this)
+        // Check if the "key" object exists
         if (root.has("key")) {
             JsonObject keyObject = root.getAsJsonObject("key");
 
@@ -311,7 +295,7 @@ public abstract class RecipeManagerMixin {
         if (obj.has("item")) {
             list.add(obj.get("item").getAsString());
         }
-        else if (obj.has("tag")) {;
+        else if (obj.has("tag") && itemsInTags.containsKey(obj.get("tag").getAsString())) {
             list.addAll(itemsInTags.get(obj.get("tag").getAsString()));
         }
     }
@@ -378,44 +362,54 @@ public abstract class RecipeManagerMixin {
             if (rows[i].length() != 3) return false;
         }
 
-//        // Extract the candidate character from row[0].charAt(0)
-//        char c = rows[0].charAt(0);
-//        if (c == ' ') return false;
-//
-//        // Build the expected string line for this c:
-//        String expectedLine = "" + c + c + c;
-//
-//        return rows[0].equals(expectedLine) && rows[1].equals(expectedLine) && rows[2].equals(expectedLine);
-        return true;
+        // Extract the candidate character from row[0].charAt(0)
+        char c = rows[0].charAt(0);
+        if (c == ' ') return false;
+
+        // Build the expected string line for this c:
+        String expectedLine = "" + c + c + c;
+
+        return rows[0].equals(expectedLine) && rows[1].equals(expectedLine) && rows[2].equals(expectedLine);
     }
 
-//    @Unique
-//    private static boolean hasMekanismRawBlockPattern(JsonElement element) {
-//        JsonObject object = element.getAsJsonObject();
-//
-//        // isnt full block conversion
-//        if (getCount(element) != 1) return false;
-//
-//        if (!object.has("pattern")) return false;
-//
-//        JsonElement patternElem = object.get("pattern");
-//        if (!patternElem.isJsonArray()) return false;
-//
-//        JsonArray patternArray = patternElem.getAsJsonArray();
-//        // Must have exactly 3 rows
-//        if (patternArray.size() != 3) return false;
-//
-//        // Each row must be a string of length 3
-//        String[] rows = new String[3];
-//        for (int i = 0; i < 3; i++) {
-//            JsonElement rowElem = patternArray.get(i);
-//            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
-//            rows[i] = rowElem.getAsString();
-//            if (rows[i].length() != 3) return false;
-//        }
-//
-//
-//    }
+    @Unique
+    private static boolean isMekanismRawBlockPattern(JsonElement element) {
+        JsonObject object = element.getAsJsonObject();
+
+        // isnt full block conversion
+        if (getCount(element) != 1) return false;
+
+        // isnt golden apple
+        String result = getResult(element);
+        if (!result.contains("block")) return false;
+
+        if (!object.has("pattern")) return false;
+
+        JsonElement patternElem = object.get("pattern");
+        if (!patternElem.isJsonArray()) return false;
+
+        JsonArray patternArray = patternElem.getAsJsonArray();
+        // Must have exactly 3 rows
+        if (patternArray.size() != 3) return false;
+
+        // Each row must be a string of length 3
+        String[] rows = new String[3];
+        for (int i = 0; i < 3; i++) {
+            JsonElement rowElem = patternArray.get(i);
+            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
+            rows[i] = rowElem.getAsString();
+            if (rows[i].length() != 3) return false;
+        }
+        
+        char char_tag = rows[0].charAt(0);
+        char char_item = rows[1].charAt(1);
+        if (char_tag == ' ' || char_item == ' ') return false;
+        
+        String top_bottom = "" + char_tag + char_tag + char_tag; 
+        String middle = "" + char_tag + char_item + char_tag;
+
+        return rows[0].equals(top_bottom) && rows[1].equals(middle) && rows[2].equals(top_bottom);
+    }
 
     @Unique
     private static boolean hasSlabPattern(JsonElement element) {
