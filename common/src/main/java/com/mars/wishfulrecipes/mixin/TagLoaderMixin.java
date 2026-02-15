@@ -32,7 +32,6 @@ public class TagLoaderMixin<T> {
 
                 // skipping nested tags
                 if (!item.startsWith("#")) {
-                    //System.out.println("tag: " + tag + ", item: " + item);
                     List<String> items;
                     if (itemsInTags.containsKey(tag)) {
                         items = itemsInTags.get(tag);

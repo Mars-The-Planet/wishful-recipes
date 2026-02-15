@@ -42,7 +42,12 @@ public abstract class RecipeManagerMixin {
         // is it ever part of a stonecutting recipe
         Set<String> isStone = new HashSet<>();
 
-        for (JsonElement recipe : map.values()) {
+        // first recipe loop
+        for (JsonElement recipeElement : map.values()) {
+            JsonObject recipe = recipeElement.getAsJsonObject();
+            String result = getResult(recipe);
+            if (result == null) continue;
+
             // looking for items in stonecutting recipes
             if (getIngredients(recipe).length > 0 && blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:stonecutting")) {
                 isStone.addAll(Arrays.asList(getIngredients(recipe)));
@@ -54,15 +59,14 @@ public abstract class RecipeManagerMixin {
                 if (ingredients.length < 1) continue;
                 for (String ingredient : ingredients) {
                     if (!isRawMetal.containsKey(ingredient)) {
-                        isRawMetal.put(ingredient, new String[]{ingredient, getResult(recipe), "", "", String.valueOf(getExp(recipe))});
+                        isRawMetal.put(ingredient, new String[]{ingredient, result, "", "", String.valueOf(getExp(recipe))});
                     }
                 }
             }
 
             if (hasSlabPattern(recipe)) {
                 String[] keys = getKeys(recipe);
-                String result = getResult(recipe);
-                if (keys.length < 1 || keys[0] == null || result == null) continue;
+                if (keys.length < 1 || keys[0] == null) continue;
 
                 // slabs to blocks
                 if (slabs_to_blocks_enable)
@@ -71,8 +75,6 @@ public abstract class RecipeManagerMixin {
 
             if (hasStairsPattern(recipe)) {
                 String[] keys = getKeys(recipe);
-                String result = getResult(recipe);
-                if (result == null) continue;
                 for (String key : keys) {
                     if (key == null) continue;
 
@@ -92,24 +94,23 @@ public abstract class RecipeManagerMixin {
             // walls to blocks
             if (hasWallPattern(recipe) && walls_to_blocks_enable) {
                 String[] keys = getKeys(recipe);
-                String result = getResult(recipe);
-                if (keys.length < 1 || keys[0] == null || result == null) continue;
+                if (keys.length < 1 || keys[0] == null) continue;
 
                 DeimosRecipeGenerator.createItemConvertorJson(result, keys[0], walls_to_blocks_amount);
             }
         }
 
-        // second loop
-        for (JsonElement recipe : map.values()) {
+        // second recipe loop
+        for (JsonElement recipeElement : map.values()) {
+            JsonObject recipe = recipeElement.getAsJsonObject();
             // to check for the rest of metal blasting properties
-            //System.out.println("blasting raw 2");
             if (blasting_raw_metal_blocks_enable && (hasFullBlockPattern(recipe) || isMekanismRawBlockPattern(recipe))) {
                 String[] keys = getKeys(recipe);
                 String result = getResult(recipe);
                 if (keys.length < 1) continue;
 
                 for (String key : keys) {
-                    if (key == null || result == null /*|| !result.contains("block")*/) continue;
+                    if (key == null || result == null) continue;
 
                     // for raw metal blocks
                     if (isRawMetal.containsKey(key)) {
@@ -150,33 +151,30 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static String getType(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
-        if (!object.has("type")) return null;
+    private static String getType(JsonObject recipe) {
+        if (!recipe.has("type")) return null;
 
-        JsonElement typeElement = object.get("type");
+        JsonElement typeElement = recipe.get("type");
         if (!typeElement.isJsonPrimitive() || !((JsonPrimitive) typeElement).isString()) return null;
 
         return typeElement.getAsString();
     }
 
     @Unique
-    private static float getExp(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
-        if (!object.has("experience")) return 0;
+    private static float getExp(JsonObject recipe) {
+        if (!recipe.has("experience")) return 0;
 
-        JsonElement typeElement = object.get("experience");
+        JsonElement typeElement = recipe.get("experience");
         if (!typeElement.isJsonPrimitive() || !((JsonPrimitive) typeElement).isNumber()) return 0;
 
         return typeElement.getAsFloat();
     }
 
     @Unique
-    private static String getResult(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
-        if (!object.has("result")) return null;
+    private static String getResult(JsonObject recipe) {
+        if (!recipe.has("result")) return null;
 
-        JsonObject resultObject = object.getAsJsonObject("result");
+        JsonObject resultObject = recipe.getAsJsonObject("result");
         if (!resultObject.has("id")) return null;
 
         JsonElement idElement = resultObject.get("id");
@@ -186,11 +184,10 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static int getCount(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
-        if (!object.has("result")) return 0;
+    private static int getCount(JsonObject recipe) {
+        if (!recipe.has("result")) return 0;
 
-        JsonObject resultObject = object.getAsJsonObject("result");
+        JsonObject resultObject = recipe.getAsJsonObject("result");
         if (!resultObject.has("count")) return 0;
 
         JsonElement countElement = resultObject.get("count");
@@ -200,12 +197,12 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static String[] getIngredients(JsonElement element) {
+    private static String[] getIngredients(JsonObject recipe) {
         List<String> ingredientsList = new ArrayList<>();
 
         // Ensure the element is a valid object before accessing fields
-        if (element != null && element.isJsonObject()) {
-            JsonObject root = element.getAsJsonObject();
+        if (recipe != null && recipe.isJsonObject()) {
+            JsonObject root = recipe.getAsJsonObject();
 
             // Check if the "ingredient" member exists
             if (root.has("ingredient")) {
@@ -244,15 +241,15 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static String[] getKeys(JsonElement element) {
+    private static String[] getKeys(JsonObject recipe) {
         List<String> items = new ArrayList<>();
 
         // Ensure the element is a valid object
-        if (element == null || !element.isJsonObject()) {
+        if (recipe == null || !recipe.isJsonObject()) {
             return new String[0];
         }
 
-        JsonObject root = element.getAsJsonObject();
+        JsonObject root = recipe.getAsJsonObject();
 
         // Check if the "key" object exists
         if (root.has("key")) {
@@ -267,13 +264,13 @@ public abstract class RecipeManagerMixin {
                 if (ingredient.isJsonArray()) {
                     JsonArray alternatives = ingredient.getAsJsonArray();
                     for (JsonElement alt : alternatives) {
-                        extractItemString(alt, items);
+                        extractItemString(alt.getAsJsonObject(), items);
                     }
                 }
                 // Case 2: The ingredient is a single object (JsonObject)
                 // Example: "key": { "#": {"item": "A"} }
                 else if (ingredient.isJsonObject()) {
-                    extractItemString(ingredient, items);
+                    extractItemString(ingredient.getAsJsonObject(), items);
                 }
             }
         }
@@ -283,10 +280,10 @@ public abstract class RecipeManagerMixin {
 
     // Helper method to extract "item" (or "tag") from the ingredient object
     @Unique
-    private static void extractItemString(JsonElement element, List<String> list) {
-        if (!element.isJsonObject()) return;
+    private static void extractItemString(JsonObject recipe, List<String> list) {
+        if (!recipe.isJsonObject()) return;
 
-        JsonObject obj = element.getAsJsonObject();
+        JsonObject obj = recipe.getAsJsonObject();
 
         if (obj.has("item")) {
             list.add(obj.get("item").getAsString());
@@ -297,15 +294,14 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static boolean hasWallPattern(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
+    private static boolean hasWallPattern(JsonObject recipe) {
 
         // is wall
-        if (getCount(element) != 6) return false;
+        if (getCount(recipe) != 6) return false;
 
-        if (!object.has("pattern")) return false;
+        if (!recipe.has("pattern")) return false;
 
-        JsonElement patternElem = object.get("pattern");
+        JsonElement patternElem = recipe.get("pattern");
         if (!patternElem.isJsonArray()) return false;
 
         JsonArray patternArray = patternElem.getAsJsonArray();
@@ -332,17 +328,16 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static boolean hasFullBlockPattern(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
+    private static boolean hasFullBlockPattern(JsonObject recipe) {
 
-        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
 
         // isnt full block conversion
-        if (getCount(element) != 1) return false;
+        if (getCount(recipe) != 1) return false;
 
-        if (!object.has("pattern")) return false;
+        if (!recipe.has("pattern")) return false;
 
-        JsonElement patternElem = object.get("pattern");
+        JsonElement patternElem = recipe.get("pattern");
         if (!patternElem.isJsonArray()) return false;
 
         JsonArray patternArray = patternElem.getAsJsonArray();
@@ -369,21 +364,20 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static boolean isMekanismRawBlockPattern(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
+    private static boolean isMekanismRawBlockPattern(JsonObject recipe) {
 
-        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
 
         // isnt full block conversion
-        if (getCount(element) != 1) return false;
+        if (getCount(recipe) != 1) return false;
 
         // isnt golden apple
-        String result = getResult(element);
+        String result = getResult(recipe);
         if (!result.contains("block")) return false;
 
-        if (!object.has("pattern")) return false;
+        if (!recipe.has("pattern")) return false;
 
-        JsonElement patternElem = object.get("pattern");
+        JsonElement patternElem = recipe.get("pattern");
         if (!patternElem.isJsonArray()) return false;
 
         JsonArray patternArray = patternElem.getAsJsonArray();
@@ -410,17 +404,16 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static boolean hasSlabPattern(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
+    private static boolean hasSlabPattern(JsonObject recipe) {
 
-        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
 
         // isnt bread
-        if (getCount(element) != 6) return false;
+        if (getCount(recipe) != 6) return false;
 
-        if (!object.has("pattern")) return false;
+        if (!recipe.has("pattern")) return false;
 
-        JsonElement patternElem = object.get("pattern");
+        JsonElement patternElem = recipe.get("pattern");
         if (!patternElem.isJsonArray()) return false;
 
         JsonArray patternArray = patternElem.getAsJsonArray();
@@ -444,14 +437,13 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static boolean hasStairsPattern(JsonElement element) {
-        JsonObject object = element.getAsJsonObject();
+    private static boolean hasStairsPattern(JsonObject recipe) {
 
-        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
 
-        if (!object.has("pattern")) return false;
+        if (!recipe.has("pattern")) return false;
 
-        JsonElement patternElem = object.get("pattern");
+        JsonElement patternElem = recipe.get("pattern");
         if (!patternElem.isJsonArray()) return false;
 
         JsonArray patternArray = patternElem.getAsJsonArray();
