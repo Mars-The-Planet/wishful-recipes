@@ -43,7 +43,6 @@ public abstract class RecipeManagerMixin {
         Set<String> isStone = new HashSet<>();
 
         for (JsonElement recipe : map.values()) {
-
             // looking for items in stonecutting recipes
             if (getIngredients(recipe).length > 0 && blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:stonecutting")) {
                 isStone.addAll(Arrays.asList(getIngredients(recipe)));
@@ -70,14 +69,14 @@ public abstract class RecipeManagerMixin {
                     DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList(result, result), keys[0], slabs_to_blocks_amount);
             }
 
-            // better stairs crafting
             if (hasStairsPattern(recipe)) {
                 String[] keys = getKeys(recipe);
                 String result = getResult(recipe);
-                if (keys.length < 1 || keys[0] == null || result == null) continue;
+                if (result == null) continue;
+                for (String key : keys) {
+                    if (key == null) continue;
 
-                if (better_stairs_crafting_enable) {
-                    for (String key : keys) {
+                    if (better_stairs_crafting_enable) {
                         DeimosRecipeGenerator.createShapedRecipeJson(
                                 Lists.newArrayList(key),
                                 Lists.newArrayList("# ", "##"),
@@ -85,11 +84,9 @@ public abstract class RecipeManagerMixin {
                                 better_stairs_crafting_amount
                         );
                     }
-                }
 
-                // stairs to blocks
-                if (stairs_to_blocks_enable)
-                    DeimosRecipeGenerator.createItemConvertorJson(result, keys[0], stairs_to_blocks_amount);
+                    if (stairs_to_blocks_enable) DeimosRecipeGenerator.createItemConvertorJson(result, key, stairs_to_blocks_amount);
+                }
             }
 
             // walls to blocks
@@ -131,7 +128,6 @@ public abstract class RecipeManagerMixin {
                     }
                 }
             }
-
 
             if (blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:smelting")) {
                 if (getIngredients(recipe).length > 0 && isStone.contains(getIngredients(recipe)[0]) || isStone.contains(getResult(recipe))) {
@@ -376,6 +372,8 @@ public abstract class RecipeManagerMixin {
     private static boolean isMekanismRawBlockPattern(JsonElement element) {
         JsonObject object = element.getAsJsonObject();
 
+        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+
         // isnt full block conversion
         if (getCount(element) != 1) return false;
 
@@ -415,6 +413,8 @@ public abstract class RecipeManagerMixin {
     private static boolean hasSlabPattern(JsonElement element) {
         JsonObject object = element.getAsJsonObject();
 
+        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+
         // isnt bread
         if (getCount(element) != 6) return false;
 
@@ -446,6 +446,9 @@ public abstract class RecipeManagerMixin {
     @Unique
     private static boolean hasStairsPattern(JsonElement element) {
         JsonObject object = element.getAsJsonObject();
+
+        if (!getType(element).equals("minecraft:crafting_shaped")) return false;
+
         if (!object.has("pattern")) return false;
 
         JsonElement patternElem = object.get("pattern");
