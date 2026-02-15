@@ -148,7 +148,6 @@ public abstract class RecipeManagerMixin {
             for (String key : isRawMetal.keySet()) {
                 String[] items = isRawMetal.get(key);
                 if (Arrays.asList(items).contains("")) continue;
-                System.out.println("blasting ctyrka: " + items[0] + ", " + items[1] + ", " + items[2] + ", " + items[3]);
                 if (blasting_raw_metal_blocks_enable)
                     DeimosRecipeGenerator.createBlastingJson(items[2], items[3], blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
                 if (smelting_raw_metal_blocks_enable)

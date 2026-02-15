@@ -1,5 +1,6 @@
 package com.mars.wishfulrecipes;
 
+import com.google.common.collect.Lists;
 import com.mars.deimos.config.DeimosConfig;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
 
@@ -26,5 +27,17 @@ public class CommonClass {
                 DeimosRecipeGenerator.createBlastingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
             }
         }
+
+        // 26.1 becomes official
+        if (backport_name_tag_enable)
+            DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList("paper", "#c:nuggets"), "name_tag", 1);
+
+        // 1.21.6 becomes official
+        if (backport_saddle_enable)
+            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("leather", "iron_ingot"), Lists.newArrayList(" A ", "ABA"), "saddle", 1);
+
+        // 1.21.2 becomes official
+        if (backport_bundle_enable)
+            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string", "leather"), Lists.newArrayList("A", "B"), "bundle", 1);
     }
 }

@@ -48,4 +48,8 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "minecraft:red_terracotta, minecraft:red_glazed_terracotta, 0.1",
             "minecraft:black_terracotta, minecraft:black_glazed_terracotta, 0.1"
     );
+
+    @Entry public static boolean backport_name_tag_enable = true;
+    @Entry public static boolean backport_saddle_enable = true;
+    @Entry public static boolean backport_bundle_enable = true;
 }
