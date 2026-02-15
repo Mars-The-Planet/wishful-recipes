@@ -105,14 +105,15 @@ public abstract class RecipeManagerMixin {
         // second recipe loop
         for (JsonElement recipeElement : map.values()) {
             JsonObject recipe = recipeElement.getAsJsonObject();
+            String result = getResult(recipe);
+            if (result == null) continue;
+
             // to check for the rest of metal blasting properties
             if (blasting_raw_metal_blocks_enable && (hasFullBlockPattern(recipe) || isMekanismRawBlockPattern(recipe))) {
                 String[] keys = getKeys(recipe);
-                String result = getResult(recipe);
-                if (keys.length < 1) continue;
 
                 for (String key : keys) {
-                    if (key == null || result == null) continue;
+                    if (key == null) continue;
 
                     // for raw metal blocks
                     if (isRawMetal.containsKey(key)) {
@@ -137,7 +138,7 @@ public abstract class RecipeManagerMixin {
 
                 for (String ingredient : ingredients) {
                     if (isStone.contains(ingredient) || isStone.contains(getResult(recipe)))
-                        DeimosRecipeGenerator.createBlastingJson(ingredient, Objects.requireNonNull(getResult(recipe)), 100, getExp(recipe));
+                        DeimosRecipeGenerator.createBlastingJson(ingredient, result, 100, getExp(recipe));
                 }
             }
         }
