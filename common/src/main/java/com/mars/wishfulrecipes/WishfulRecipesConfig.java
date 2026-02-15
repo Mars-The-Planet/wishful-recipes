@@ -51,5 +51,6 @@ public class WishfulRecipesConfig extends DeimosConfig {
 
     @Entry public static boolean backport_name_tag_enable = true;
     @Entry public static boolean backport_saddle_enable = true;
+    @Entry public static boolean backport_lead_enable = true;
     @Entry public static boolean backport_bundle_enable = true;
 }

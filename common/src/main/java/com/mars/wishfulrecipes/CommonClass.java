@@ -35,6 +35,8 @@ public class CommonClass {
         // 1.21.6 becomes official
         if (backport_saddle_enable)
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("leather", "iron_ingot"), Lists.newArrayList(" A ", "ABA"), "saddle", 1);
+        if (backport_lead_enable)
+            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string"), Lists.newArrayList("AA ", "AA ", "  A"), "lead", 2);
 
         // 1.21.2 becomes official
         if (backport_bundle_enable)
