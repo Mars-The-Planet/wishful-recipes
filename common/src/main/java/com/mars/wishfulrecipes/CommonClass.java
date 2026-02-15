@@ -32,11 +32,19 @@ public class CommonClass {
         if (backport_name_tag_enable)
             DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList("paper", "#c:nuggets"), "name_tag", 1);
 
+        // 1.21.9 becomes official
+        if (backport_copper_trapdoor_enable)
+            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("copper_ingot"), Lists.newArrayList("AA", "AA"), "copper_trapdoor", 2);
+
         // 1.21.6 becomes official
         if (backport_saddle_enable)
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("leather", "iron_ingot"), Lists.newArrayList(" A ", "ABA"), "saddle", 1);
         if (backport_lead_enable)
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string"), Lists.newArrayList("AA ", "AA ", "  A"), "lead", 2);
+
+        // 1.21.5 becomes official
+        if (backport_lodestone_enable)
+            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("chiseled_stone_bricks", "iron_ingot"), Lists.newArrayList("AAA", "ABA", "AAA"), "lodestone", 1);
 
         // 1.21.2 becomes official
         if (backport_bundle_enable)
