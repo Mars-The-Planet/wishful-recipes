@@ -148,6 +148,7 @@ public abstract class RecipeManagerMixin {
             for (String key : isRawMetal.keySet()) {
                 String[] items = isRawMetal.get(key);
                 if (Arrays.asList(items).contains("")) continue;
+                System.out.println("blasting ctyrka: " + items[0] + ", " + items[1] + ", " + items[2] + ", " + items[3]);
                 if (blasting_raw_metal_blocks_enable)
                     DeimosRecipeGenerator.createBlastingJson(items[2], items[3], blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
                 if (smelting_raw_metal_blocks_enable)
@@ -284,7 +285,6 @@ public abstract class RecipeManagerMixin {
         return items.toArray(new String[0]);
     }
 
-    // Helper method to extract "item" (or "tag") from the ingredient object
     @Unique
     private static void extractItemString(JsonObject recipe, List<String> list) {
         if (!recipe.isJsonObject()) return;
@@ -299,180 +299,101 @@ public abstract class RecipeManagerMixin {
         }
     }
 
+    // if rightAmount set to 0 it doesnt check for it
     @Unique
-    private static boolean hasWallPattern(JsonObject recipe) {
+    private static String[] basePatternCheck(JsonObject recipe, int rightAmount, int rightPatternArraySize) {
+        if (!getType(recipe).equals("minecraft:crafting_shaped")) return null;
 
-        // is wall
-        if (getCount(recipe) != 6) return false;
+        if (rightAmount != 0 && getCount(recipe) != rightAmount) return null;
 
-        if (!recipe.has("pattern")) return false;
+        if (!recipe.has("pattern")) return null;
 
         JsonElement patternElem = recipe.get("pattern");
-        if (!patternElem.isJsonArray()) return false;
+        if (!patternElem.isJsonArray()) return null;
 
         JsonArray patternArray = patternElem.getAsJsonArray();
-        // Must have exactly 2 rows
-        if (patternArray.size() != 2) return false;
+        if (patternArray.size() != rightPatternArraySize) return null;
 
-        // Each row must be a string of length 3
-        String[] rows = new String[2];
-        for (int i = 0; i < 2; i++) {
+        String[] rows = new String[rightPatternArraySize];
+        for (int i = 0; i < rightPatternArraySize; i++) {
             JsonElement rowElem = patternArray.get(i);
-            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
+            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return null;
             rows[i] = rowElem.getAsString();
-            if (rows[i].length() != 3) return false;
+            if (rows[i].length() != 3) return null;
         }
 
-        // Extract the candidate character from row[0].charAt(0)
+        return rows;
+    }
+
+    @Unique
+    private static boolean hasWallPattern(JsonObject recipe) {
+        String[] rows = basePatternCheck(recipe, 6, 2);
+        if (rows == null) return false;
+
+        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
         // Build the expected string line for this c:
         String expectedLine = "" + c + c + c;
-
         return rows[0].equals(expectedLine) && rows[1].equals(expectedLine);
     }
 
     @Unique
     private static boolean hasFullBlockPattern(JsonObject recipe) {
+        String[] rows = basePatternCheck(recipe, 1, 3);
+        if (rows == null) return false;
 
-        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
-
-        // isnt full block conversion
-        if (getCount(recipe) != 1) return false;
-
-        if (!recipe.has("pattern")) return false;
-
-        JsonElement patternElem = recipe.get("pattern");
-        if (!patternElem.isJsonArray()) return false;
-
-        JsonArray patternArray = patternElem.getAsJsonArray();
-        // Must have exactly 3 rows
-        if (patternArray.size() != 3) return false;
-
-        // Each row must be a string of length 3
-        String[] rows = new String[3];
-        for (int i = 0; i < 3; i++) {
-            JsonElement rowElem = patternArray.get(i);
-            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
-            rows[i] = rowElem.getAsString();
-            if (rows[i].length() != 3) return false;
-        }
-
-        // Extract the candidate character from row[0].charAt(0)
+        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
         // Build the expected string line for this c:
         String expectedLine = "" + c + c + c;
-
         return rows[0].equals(expectedLine) && rows[1].equals(expectedLine) && rows[2].equals(expectedLine);
     }
 
     @Unique
     private static boolean isMekanismRawBlockPattern(JsonObject recipe) {
-
-        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
-
-        // isnt full block conversion
-        if (getCount(recipe) != 1) return false;
-
         // isnt golden apple
-        String result = getResult(recipe);
-        if (!result.contains("block")) return false;
+        if (!getResult(recipe).contains("block")) return false;
 
-        if (!recipe.has("pattern")) return false;
+        String[] rows = basePatternCheck(recipe, 1, 3);
+        if (rows == null) return false;
 
-        JsonElement patternElem = recipe.get("pattern");
-        if (!patternElem.isJsonArray()) return false;
-
-        JsonArray patternArray = patternElem.getAsJsonArray();
-        // Must have exactly 3 rows
-        if (patternArray.size() != 3) return false;
-
-        // Each row must be a string of length 3
-        String[] rows = new String[3];
-        for (int i = 0; i < 3; i++) {
-            JsonElement rowElem = patternArray.get(i);
-            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
-            rows[i] = rowElem.getAsString();
-            if (rows[i].length() != 3) return false;
-        }
+        // Extract the candidate character
+        char c = rows[0].charAt(0);
+        if (c == ' ') return false;
         
-        char char_tag = rows[0].charAt(0);
-        char char_item = rows[1].charAt(1);
-        if (char_tag == ' ' || char_item == ' ') return false;
-        
-        String top_bottom = "" + char_tag + char_tag + char_tag; 
-        String middle = "" + char_tag + char_item + char_tag;
-
-        return rows[0].equals(top_bottom) && rows[1].equals(middle) && rows[2].equals(top_bottom);
+        String expected = "" + c + c + c;
+        return rows[0].equals(expected) && rows[1].charAt(0) == c && rows[2].charAt(0) == c && rows[2].equals(expected);
     }
 
     @Unique
     private static boolean hasSlabPattern(JsonObject recipe) {
+        String[] rows = basePatternCheck(recipe, 6, 1);
+        if (rows == null) return false;
 
-        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
-
-        // isnt bread
-        if (getCount(recipe) != 6) return false;
-
-        if (!recipe.has("pattern")) return false;
-
-        JsonElement patternElem = recipe.get("pattern");
-        if (!patternElem.isJsonArray()) return false;
-
-        JsonArray patternArray = patternElem.getAsJsonArray();
-        // Must have exactly 1 row
-        if (patternArray.size() != 1) return false;
-
-        // row must be a string of length 3
-        JsonElement rowElem = patternArray.get(0);
-        if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
-        String row = rowElem.getAsString();
-        if (row.length() != 3) return false;
-
-        // Extract the candidate character from row[0].charAt(0)
-        char c = row.charAt(0);
+        // Extract the candidate character
+        char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
-        // Build the three expected strings for this c:
-        String expected = "" + c + c + c;    // three c's, no spaces
-
-        return row.equals(expected);
+        String expected = "" + c + c + c;
+        return rows[0].equals(expected);
     }
 
     @Unique
     private static boolean hasStairsPattern(JsonObject recipe) {
+        String[] rows = basePatternCheck(recipe, 0, 3);
+        if (rows == null) return false;
 
-        if (!getType(recipe).equals("minecraft:crafting_shaped")) return false;
-
-        if (!recipe.has("pattern")) return false;
-
-        JsonElement patternElem = recipe.get("pattern");
-        if (!patternElem.isJsonArray()) return false;
-
-        JsonArray patternArray = patternElem.getAsJsonArray();
-        // Must have exactly 3 rows
-        if (patternArray.size() != 3) return false;
-
-        // Each row must be a string of length 3
-        String[] rows = new String[3];
-        for (int i = 0; i < 3; i++) {
-            JsonElement rowElem = patternArray.get(i);
-            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return false;
-            rows[i] = rowElem.getAsString();
-            if (rows[i].length() != 3) return false;
-        }
-
-        // Extract the candidate character from row[0].charAt(0)
+        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
-        // Build the three expected strings for this c:
-        String expected0 = "" + c + "  ";     // c + two spaces
-        String expected1 = "" + c + c + " ";  // two c's + one space
-        String expected2 = "" + c + c + c;    // three c's, no spaces
+        String expected0 = "" + c + "  ";
+        String expected1 = "" + c + c + " ";
+        String expected2 = "" + c + c + c;
 
         return rows[0].equals(expected0) && rows[1].equals(expected1) && rows[2].equals(expected2);
     }
