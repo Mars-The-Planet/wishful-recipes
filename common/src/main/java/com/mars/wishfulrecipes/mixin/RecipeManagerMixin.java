@@ -56,7 +56,6 @@ public abstract class RecipeManagerMixin {
             // checking whether item has a blasting recipe
             if (blasting_raw_metal_blocks_enable && Objects.equals(getType(recipe), "minecraft:blasting")) {
                 String[] ingredients = getIngredients(recipe);
-                if (ingredients.length < 1) continue;
                 for (String ingredient : ingredients) {
                     if (!isRawMetal.containsKey(ingredient)) {
                         isRawMetal.put(ingredient, new String[]{ingredient, result, "", "", String.valueOf(getExp(recipe))});
@@ -64,13 +63,14 @@ public abstract class RecipeManagerMixin {
                 }
             }
 
-            if (hasSlabPattern(recipe)) {
+            // slabs to blocks
+            if (hasSlabPattern(recipe) && slabs_to_blocks_enable) {
                 String[] keys = getKeys(recipe);
-                if (keys.length < 1 || keys[0] == null) continue;
 
-                // slabs to blocks
-                if (slabs_to_blocks_enable)
-                    DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList(result, result), keys[0], slabs_to_blocks_amount);
+                for (String key : keys) {
+                    if (key == null) continue;
+                    DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList(result, result), key, slabs_to_blocks_amount);
+                }
             }
 
             if (hasStairsPattern(recipe)) {
@@ -94,9 +94,11 @@ public abstract class RecipeManagerMixin {
             // walls to blocks
             if (hasWallPattern(recipe) && walls_to_blocks_enable) {
                 String[] keys = getKeys(recipe);
-                if (keys.length < 1 || keys[0] == null) continue;
 
-                DeimosRecipeGenerator.createItemConvertorJson(result, keys[0], walls_to_blocks_amount);
+                for (String key : keys) {
+                    if (key == null) continue;
+                    DeimosRecipeGenerator.createItemConvertorJson(result, key, walls_to_blocks_amount);
+                }
             }
         }
 
@@ -131,8 +133,11 @@ public abstract class RecipeManagerMixin {
             }
 
             if (blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:smelting")) {
-                if (getIngredients(recipe).length > 0 && isStone.contains(getIngredients(recipe)[0]) || isStone.contains(getResult(recipe))) {
-                    DeimosRecipeGenerator.createBlastingJson(getIngredients(recipe)[0], Objects.requireNonNull(getResult(recipe)), 100, getExp(recipe));
+                String[] ingredients = getIngredients(recipe);
+
+                for (String ingredient : ingredients) {
+                    if (isStone.contains(ingredient) || isStone.contains(getResult(recipe)))
+                        DeimosRecipeGenerator.createBlastingJson(ingredient, Objects.requireNonNull(getResult(recipe)), 100, getExp(recipe));
                 }
             }
         }
