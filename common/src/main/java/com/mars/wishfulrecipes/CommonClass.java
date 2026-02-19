@@ -33,6 +33,7 @@ public class CommonClass {
             DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList("paper", "#c:nuggets"), "name_tag", 1);
 
         // 1.21.9 becomes official
+        // added in 1.20.3, officially in 1.21
         if (backport_copper_trapdoor_enable)
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("copper_ingot"), Lists.newArrayList("AA", "AA"), "copper_trapdoor", 2);
 
@@ -47,6 +48,7 @@ public class CommonClass {
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("chiseled_stone_bricks", "iron_ingot"), Lists.newArrayList("AAA", "ABA", "AAA"), "lodestone", 1);
 
         // 1.21.2 becomes official
+        // added in 1.17, made accessible using datapack in 1.19.3, officially in 1.21.2
         if (backport_bundle_enable)
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string", "leather"), Lists.newArrayList("A", "B"), "bundle", 1);
     }

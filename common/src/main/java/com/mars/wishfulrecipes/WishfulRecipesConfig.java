@@ -55,4 +55,8 @@ public class WishfulRecipesConfig extends DeimosConfig {
     @Entry public static boolean backport_lead_enable = true;
     @Entry public static boolean backport_lodestone_enable = true;
     @Entry public static boolean backport_bundle_enable = true;
+
+    @Entry public static boolean recipe_entry_alternatives_enable = true;
+    @Entry public static List<String> recipe_entry_alternatives_list = Lists.newArrayList(
+    );
 }
