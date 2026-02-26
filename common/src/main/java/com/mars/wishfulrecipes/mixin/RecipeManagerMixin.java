@@ -100,6 +100,39 @@ public abstract class RecipeManagerMixin {
                     DeimosRecipeGenerator.createItemConvertorJson(result, key, walls_to_blocks_amount);
                 }
             }
+
+            // use use_stone_crafting_materials tag instead of cobblestone
+            if (use_stone_crafting_materials_enable) {
+                if (use_stone_crafting_materials_list.contains(result)) {
+                    JsonObject recipeCopy = recipe.deepCopy();
+
+                    if (recipeCopy.has("key") && recipeCopy.get("key").isJsonObject()) {
+                        JsonObject keyObject = recipeCopy.getAsJsonObject("key");
+
+                        // 3. Iterate through every character mapping inside the "key" object
+                        for (Map.Entry<String, JsonElement> entry : keyObject.entrySet()) {
+                            JsonElement ingredientElement = entry.getValue();
+
+                            // Ensure the ingredient mapping is a standard JsonObject
+                            if (ingredientElement.isJsonObject()) {
+                                JsonObject ingredientObject = ingredientElement.getAsJsonObject();
+
+                                // 4. Check if it explicitly declares "item" as "minecraft:cobblestone"
+                                if (ingredientObject.has("item") &&
+                                        ingredientObject.get("item").isJsonPrimitive() &&
+                                        ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
+
+                                    // 5. Replace the "item" definition with the "tag" definition
+                                    ingredientObject.remove("item");
+                                    ingredientObject.addProperty("tag", "minecraft:stone_crafting_materials");
+                                }
+                            }
+                        }
+                    }
+
+                    DeimosRecipeGenerator.RECIPES.add(recipeCopy);
+                }
+            }
         }
 
         // second recipe loop

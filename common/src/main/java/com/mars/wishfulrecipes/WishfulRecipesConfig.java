@@ -61,9 +61,18 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "snow_block, snowball, 4",
             "packed_ice, ice, 9",
             "blue_ice, packed_ice, 9",
-            "wool, string, 4",
+            "white_wool, string, 4",
             "bamboo_block, bamboo, 9",
             "nether_wart_block, nether_wart, 9",
             "clay, clay_ball, 4"
+    );
+
+    @Entry public static boolean use_stone_crafting_materials_enable = true;
+    @Entry public static List<String> use_stone_crafting_materials_list = Lists.newArrayList(
+            "minecraft:dispenser",
+            "minecraft:dropper",
+            "minecraft:lever",
+            "minecraft:observer",
+            "minecraft:piston"
     );
 }
