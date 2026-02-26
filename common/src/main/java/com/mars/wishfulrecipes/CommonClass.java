@@ -22,9 +22,16 @@ public class CommonClass {
         }
 
         if (extra_blasting_enable) {
-            for(String blasting_recipe : extra_blasting_list){
-                String[] rawMetalSet =  (blasting_recipe.replaceAll("\\s","")).split(",");
+            for(String blastingRecipe : extra_blasting_list){
+                String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
                 DeimosRecipeGenerator.createBlastingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
+            }
+        }
+
+        if (unpacking_enable) {
+            for (String unpackingRecipe : unpacking_list) {
+                String[] unpackingSet =  (unpackingRecipe.replaceAll("\\s","")).split(",");
+                DeimosRecipeGenerator.createItemConvertorJson(unpackingSet[0], unpackingSet[1], Integer.parseInt(unpackingSet[2]));
             }
         }
 
