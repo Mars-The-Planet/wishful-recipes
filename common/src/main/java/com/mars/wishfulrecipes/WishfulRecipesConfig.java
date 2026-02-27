@@ -83,4 +83,6 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "minecraft:observer",
             "minecraft:piston"
     );
+
+    @Entry public static boolean unlock_all_recipes = true;
 }
