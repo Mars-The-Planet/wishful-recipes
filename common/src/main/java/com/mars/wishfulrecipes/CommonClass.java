@@ -28,6 +28,20 @@ public class CommonClass {
             }
         }
 
+        if (extra_smoking_enable) {
+            for(String blastingRecipe : extra_smoking_list){
+                String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
+                DeimosRecipeGenerator.createSmokingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
+            }
+        }
+
+        if (extra_smelting_enable) {
+            for(String blastingRecipe : extra_smelting_list){
+                String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
+                DeimosRecipeGenerator.createSmeltingJson(rawMetalSet[0], rawMetalSet[1], 200, Float.parseFloat(rawMetalSet[2]));
+            }
+        }
+
         if (unpacking_enable) {
             for (String unpackingRecipe : unpacking_list) {
                 String[] unpackingSet =  (unpackingRecipe.replaceAll("\\s","")).split(",");

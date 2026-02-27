@@ -49,6 +49,14 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "minecraft:black_terracotta, minecraft:black_glazed_terracotta, 0.1"
     );
 
+    @Entry public static boolean extra_smelting_enable = true;
+    @Entry public static List<String> extra_smelting_list = Lists.newArrayList(
+    );
+
+    @Entry public static boolean extra_smoking_enable = true;
+    @Entry public static List<String> extra_smoking_list = Lists.newArrayList(
+    );
+
     @Entry public static boolean backport_name_tag_enable = true;
     @Entry public static boolean backport_copper_trapdoor_enable = true;
     @Entry public static boolean backport_saddle_enable = true;
