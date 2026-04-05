@@ -85,5 +85,5 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "minecraft:piston"
     );
 
-    @Entry public static boolean unlock_all_recipes = true;
+    @Entry public static boolean unlock_all_recipes = false;
 }
