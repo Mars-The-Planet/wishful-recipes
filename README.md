@@ -1,4 +1,4 @@
-<h1><img src="https://iili.io/BujNkI1.png" alt="Title"/></h1>
+<h1><img src="https://iili.io/BujtGQs.png" alt="Title"/></h1>
 <center><h5 style="text-align: center;"><strong> 
 <a href="https://discord.gg/2CUh6gMuCt" ><img src="https://img.shields.io/discord/1027252425960198165?color=5b6ee1&amp;label=Discord&amp;style=for-the-badge&amp;logo=discord&amp;logoColor=white" alt="Discord" /></a> 
 <a href="https://patreon.com/MarsThePlanet"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DMarsThePlanet%26type%3Dpatrons&amp;style=for-the-badge" alt="Support me on Patreon" /></a> 
