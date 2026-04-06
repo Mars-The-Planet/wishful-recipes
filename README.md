@@ -5,3 +5,7 @@
 <a href="https://www.curseforge.com/minecraft/mc-mods/sever-side-horror" ><img src="https://img.shields.io/curseforge/dt/1317593?color=F16436&amp;logo=curseforge&amp;logoColor=white&amp;label=Curseforge&amp;style=for-the-badge" alt="CurseForge" /></a>
 <a href="https://modrinth.com/mod/server-side-horror" ><img src="https://img.shields.io/modrinth/dt/server-side-horror?style=for-the-badge&amp;logo=modrinth&amp;logoColor=white&amp;label=modrinth&amp;color=00AF5C" alt="Modrinth" /></a>
 </strong></h5></center>
+
+Wishful recipes is a fully configurable server-side mod. Adding a bunch of recipes that should already be part of the base game. It's highly compatible with other mods, thanks to its ability to scan already loaded recipes and to generate new ones based on them.
+
+<img src="https://iili.io/BujqUX4.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
