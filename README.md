@@ -11,3 +11,4 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 </p></center>
 
 <img src="https://iili.io/BujqUX4.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
+<img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
