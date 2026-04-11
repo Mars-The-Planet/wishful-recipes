@@ -11,4 +11,4 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 </p></center>
 
 <img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
-<img src="https://iili.io/BV37omB.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
+<img src="https://images2.imgbox.com/00/e1/aTKTyhmd_o.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
