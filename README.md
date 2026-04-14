@@ -13,4 +13,9 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/00/e1/aTKTyhmd_o.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
 <img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
 <img src="https://images2.imgbox.com/96/70/LLVMjQxG_o.png" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/>
-<img src="https://images2.imgbox.com/4b/48/M3746s2u_o.png" alt="Automatically generates shapeless recipes that convert walls into their full block variants."/>
+<img src="https://images2.imgbox.com/c6/e0/Wf7Qm2sI_o.png" alt="Automatically generates shapeless recipes that convert walls into their full block variants."/>
+
+<img src="https://images2.imgbox.com/df/8e/GlEVpNFf_o.png" alt="Automatically generates blasting recipes for full blocks of raw metals. (Optionally also smelting recipes)"/>
+
+<img src="https://images2.imgbox.com/65/47/IPVsnl27_o.png" alt="Adds blasting recipes for sand and red sand."/>
+<img src="https://images2.imgbox.com/1a/8e/hQ5r6R9S_o.png" alt="Adds blasting recipes for all stonecutter-compatible blocks that can be smelted."/>
