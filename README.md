@@ -17,6 +17,9 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 
 <img src="https://images2.imgbox.com/df/8e/GlEVpNFf_o.png" alt="Automatically generates blasting recipes for full blocks of raw metals. (Optionally also smelting recipes)"/>
 
-<img src="https://images2.imgbox.com/65/47/IPVsnl27_o.png" alt="Adds blasting recipes for sand and red sand."/>
-<img src="https://images2.imgbox.com/4d/b3/XhZfPUlu_o.png" alt="Adds blasting recipes for all stonecutter-compatible blocks that can be smelted."/>
+<img src="https://images2.imgbox.com/59/bb/vGffHWEr_o.png" alt="Adds blasting recipes for sand and red sand."/>
+<img src="https://images2.imgbox.com/bf/09/nlEJW3ss_o.png" alt="Adds blasting recipes for all stonecutter-compatible blocks that can be smelted."/>
 <img src="https://images2.imgbox.com/80/db/LGgjNf69_o.png" alt="Generates blasting recipes set by a list in the config file. By default, it adds a blasting recipe for Terracotta, Clay Balls, Clay, and Netherrack.  The extra_blasting_list config option consists of lines that look like this: minecraft:netherrack, minecraft:nether_brick, 0.1. The first part is the input item, the second part is the output item and the third one is the experience granted.  Config keys: extra_blasting_enable, extra_blasting_list"/>
+
+<img src="https://images2.imgbox.com/7c/72/RfU1V9Xq_o.png" alt="Name tag backport from 26.1"/>
+

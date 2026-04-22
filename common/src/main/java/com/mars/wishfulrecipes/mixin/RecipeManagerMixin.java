@@ -109,7 +109,7 @@ public abstract class RecipeManagerMixin {
                     if (recipeCopy.has("key") && recipeCopy.get("key").isJsonObject()) {
                         JsonObject keyObject = recipeCopy.getAsJsonObject("key");
 
-                        // 3. Iterate through every character mapping inside the "key" object
+                        // Iterate through every character mapping inside the "key" object
                         for (Map.Entry<String, JsonElement> entry : keyObject.entrySet()) {
                             JsonElement ingredientElement = entry.getValue();
 
@@ -117,12 +117,12 @@ public abstract class RecipeManagerMixin {
                             if (ingredientElement.isJsonObject()) {
                                 JsonObject ingredientObject = ingredientElement.getAsJsonObject();
 
-                                // 4. Check if it explicitly declares "item" as "minecraft:cobblestone"
+                                // Check if it explicitly declares "item" as "minecraft:cobblestone"
                                 if (ingredientObject.has("item") &&
                                         ingredientObject.get("item").isJsonPrimitive() &&
                                         ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
 
-                                    // 5. Replace the "item" definition with the "tag" definition
+                                    // Replace the "item" definition with the "tag" definition
                                     ingredientObject.remove("item");
                                     ingredientObject.addProperty("tag", "minecraft:stone_crafting_materials");
                                 }
