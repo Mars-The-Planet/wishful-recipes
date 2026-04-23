@@ -15,6 +15,8 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/96/70/LLVMjQxG_o.png" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/>
 <img src="https://images2.imgbox.com/c6/e0/Wf7Qm2sI_o.png" alt="Automatically generates shapeless recipes that convert walls into their full block variants."/>
 
+<img src="https://images2.imgbox.com/64/ec/9atKdXya_o.png" alt="BLASTING RECIPES"/>
+
 <img src="https://images2.imgbox.com/df/8e/GlEVpNFf_o.png" alt="Automatically generates blasting recipes for full blocks of raw metals. (Optionally also smelting recipes)"/>
 
 <img src="https://images2.imgbox.com/59/bb/vGffHWEr_o.png" alt="Adds blasting recipes for sand and red sand."/>
