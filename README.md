@@ -22,4 +22,8 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/80/db/LGgjNf69_o.png" alt="Generates blasting recipes set by a list in the config file. By default, it adds a blasting recipe for Terracotta, Clay Balls, Clay, and Netherrack.  The extra_blasting_list config option consists of lines that look like this: minecraft:netherrack, minecraft:nether_brick, 0.1. The first part is the input item, the second part is the output item and the third one is the experience granted.  Config keys: extra_blasting_enable, extra_blasting_list"/>
 
 <img src="https://images2.imgbox.com/7c/72/RfU1V9Xq_o.png" alt="Name tag backport from 26.1"/>
-
+<img src="https://images2.imgbox.com/ab/7e/PpOOIUXF_o.png" alt="Name tag backport from 1.21.9"/>
+<img src="https://images2.imgbox.com/33/e5/sL6IVpvt_o.png" alt="Name tag backport from 1.21.6"/>
+<img src="https://images2.imgbox.com/7d/e5/KKSz9q61_o.png" alt="Name tag backport from 1.21.6"/>
+<img src="https://images2.imgbox.com/19/1a/Sye4bKGV_o.png" alt="Name tag backport from 1.21.5"/>
+<img src="https://images2.imgbox.com/c6/55/BNbGq2Vh_o.png" alt="Name tag backport from 1.21.2"/>
