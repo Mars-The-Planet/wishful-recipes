@@ -9,6 +9,7 @@
 <center><p style="text-align: center;"> 
 Wishful recipes is a fully configurable server-side mod. Adding a bunch of recipes that should already be part of the base game. It's highly compatible with other mods, thanks to its ability to scan already loaded recipes and to generate new ones based on them.
 </p></center>
+
 <p>&nbsp;</p>
 <h3><img src="https://images2.imgbox.com/4a/c8/xctadIje_o.png" alt="GENERATED RECIPES"/></h3>
 <img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
@@ -25,6 +26,8 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/bf/09/nlEJW3ss_o.png" alt="Adds blasting recipes for all stonecutter-compatible blocks that can be smelted."/>
 <img src="https://images2.imgbox.com/80/db/LGgjNf69_o.png" alt="Generates blasting recipes set by a list in the config file. By default, it adds a blasting recipe for Terracotta, Clay Balls, Clay, and Netherrack.  The extra_blasting_list config option consists of lines that look like this: minecraft:netherrack, minecraft:nether_brick, 0.1. The first part is the input item, the second part is the output item and the third one is the experience granted.  Config keys: extra_blasting_enable, extra_blasting_list"/>
 
+<p>&nbsp;</p>
+<h3><img src="https://images2.imgbox.com/cb/18/07t06sU6_o.png" alt="BLASTING RECIPES"/></h3>
 <img src="https://images2.imgbox.com/7c/72/RfU1V9Xq_o.png" alt="Name tag backport from 26.1"/>
 <img src="https://images2.imgbox.com/ab/7e/PpOOIUXF_o.png" alt="Name tag backport from 1.21.9"/>
 <img src="https://images2.imgbox.com/33/e5/sL6IVpvt_o.png" alt="Name tag backport from 1.21.6"/>
