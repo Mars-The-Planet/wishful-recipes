@@ -17,7 +17,7 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 
 
 <p>&nbsp;</p>
-<img src="https://images2.imgbox.com/81/16/NK5wd4gv_o.png" alt="BLASTING RECIPES"/>
+<h1><img src="https://images2.imgbox.com/81/16/NK5wd4gv_o.png" alt="BLASTING RECIPES"/></h1>
 <p></p>
 
 <img src="https://images2.imgbox.com/df/8e/GlEVpNFf_o.png" alt="Automatically generates blasting recipes for full blocks of raw metals. (Optionally also smelting recipes)"/>
