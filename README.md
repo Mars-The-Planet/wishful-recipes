@@ -9,9 +9,10 @@
 <center><p style="text-align: center;"> 
 Wishful recipes is a fully configurable server-side mod. Adding a bunch of recipes that should already be part of the base game. It's highly compatible with other mods, thanks to its ability to scan already loaded recipes and to generate new ones based on them.
 </p></center>
-
-<img src="https://images2.imgbox.com/00/e1/aTKTyhmd_o.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
+<p>&nbsp;</p>
+<h3><img src="https://images2.imgbox.com/4a/c8/xctadIje_o.png" alt="GENERATED RECIPES"/></h3>
 <img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
+<img src="https://images2.imgbox.com/00/e1/aTKTyhmd_o.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
 <img src="https://images2.imgbox.com/96/70/LLVMjQxG_o.png" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/>
 <img src="https://images2.imgbox.com/c6/e0/Wf7Qm2sI_o.png" alt="Automatically generates shapeless recipes that convert walls into their full block variants."/>
 
