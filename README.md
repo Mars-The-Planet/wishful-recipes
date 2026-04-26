@@ -35,5 +35,5 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/19/1a/Sye4bKGV_o.png" alt="Name tag backport from 1.21.5"/>
 <img src="https://images2.imgbox.com/c6/55/BNbGq2Vh_o.png" alt="Name tag backport from 1.21.2"/>
 
-<img src="https://images2.imgbox.com/ee/0d/38qqFkWd_o.png" alt="Generates unpacking recipes set by a list in the config file. By default, it adds a unpacking recipes for Clay, Snow Blocks, Packed Ice, Blue Ice, White Wool, Blocks of Amethyst, and Honeycomb Blocks. The unpacking_list config option consists of lines that look like this: blue_ice, packed_ice, 9. The first part is the input item, the second part is the output item and third part is the number of output items Config keys: unpacking_list, unpacking_enable"/>
+<img src="https://images2.imgbox.com/6b/c7/EvZvkK4f_o.png" alt="Generates unpacking recipes set by a list in the config file. By default, it adds a unpacking recipes for Clay, Snow Blocks, Packed Ice, Blue Ice, White Wool, Blocks of Amethyst, and Honeycomb Blocks. The unpacking_list config option consists of lines that look like this: blue_ice, packed_ice, 9. The first part is the input item, the second part is the output item and third part is the number of output items Config keys: unpacking_list, unpacking_enable"/>
 
