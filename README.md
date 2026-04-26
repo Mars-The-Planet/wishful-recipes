@@ -24,7 +24,7 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 
 <img src="https://images2.imgbox.com/59/bb/vGffHWEr_o.png" alt="Adds blasting recipes for sand and red sand."/>
 <img src="https://images2.imgbox.com/bf/09/nlEJW3ss_o.png" alt="Adds blasting recipes for all stonecutter-compatible blocks that can be smelted."/>
-<img src="https://images2.imgbox.com/80/88/2KrUBBrq_o.png" alt="Generates blasting recipes set by a list in the config file. By default, it adds a blasting recipe for Terracotta, Clay Balls, Clay, and Netherrack.  The extra_blasting_list config option consists of lines that look like this: minecraft:netherrack, minecraft:nether_brick, 0.1. The first part is the input item, the second part is the output item and the third one is the experience granted.  Config keys: extra_blasting_enable, extra_blasting_list"/>
+<img src="https://images2.imgbox.com/80/88/2KrUBBrq_o.png" alt="Generates blasting recipes set by a list in the config file. By default, it adds a blasting recipe for Terracotta, Clay Balls, Clay, and Netherrack. The extra_blasting_list config option consists of lines that look like this: minecraft:netherrack, minecraft:nether_brick, 0.1. The first part is the input item, the second part is the output item and the third one is the experience granted. Config keys: extra_blasting_enable, extra_blasting_list"/>
 
 <p>&nbsp;</p>
 <h3><img src="https://images2.imgbox.com/cb/18/07t06sU6_o.png" alt="BACKPORTED RECIPES"/></h3>
@@ -34,4 +34,6 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/7d/e5/KKSz9q61_o.png" alt="Name tag backport from 1.21.6"/>
 <img src="https://images2.imgbox.com/19/1a/Sye4bKGV_o.png" alt="Name tag backport from 1.21.5"/>
 <img src="https://images2.imgbox.com/c6/55/BNbGq2Vh_o.png" alt="Name tag backport from 1.21.2"/>
+
+<img src="https://images2.imgbox.com/ee/0d/38qqFkWd_o.png" alt="Generates unpacking recipes set by a list in the config file. By default, it adds a unpacking recipes for Clay, Snow Blocks, Packed Ice, Blue Ice, White Wool, Blocks of Amethyst, and Honeycomb Blocks. The unpacking_list config option consists of lines that look like this: blue_ice, packed_ice, 9. The first part is the input item, the second part is the output item and third part is the number of output items Config keys: unpacking_list, unpacking_enable"/>
 

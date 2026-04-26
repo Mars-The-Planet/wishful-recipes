@@ -71,7 +71,8 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "white_wool, string, 4",
             "bamboo_block, bamboo, 9",
             "nether_wart_block, nether_wart, 9",
-            "honeycomb_block, honeycomb, 4"
+            "honeycomb_block, honeycomb, 4",
+            "amethyst_block, amethyst_shard, 4"
     );
 
     @Entry public static boolean use_stone_crafting_materials_enable = true;
