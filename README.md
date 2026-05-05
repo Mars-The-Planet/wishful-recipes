@@ -11,7 +11,6 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 </p></center>
 
 <p>&nbsp;</p>
-<h3><img src="https://images2.imgbox.com/1a/5f/nfKZ3qVH_o.png" alt="GENERATED RECIPES"/></h3>
 <img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
 <img src="https://images2.imgbox.com/00/e1/aTKTyhmd_o.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
 <img src="https://images2.imgbox.com/96/70/LLVMjQxG_o.png" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/>
@@ -36,4 +35,5 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/c6/55/BNbGq2Vh_o.png" alt="Name tag backport from 1.21.2"/>
 
 <img src="https://images2.imgbox.com/6b/c7/EvZvkK4f_o.png" alt="Generates unpacking recipes set by a list in the config file. By default, it adds a unpacking recipes for Clay, Snow Blocks, Packed Ice, Blue Ice, White Wool, Blocks of Amethyst, and Honeycomb Blocks. The unpacking_list config option consists of lines that look like this: blue_ice, packed_ice, 9. The first part is the input item, the second part is the output item and third part is the number of output items Config keys: unpacking_list, unpacking_enable"/>
+<img src="https://images2.imgbox.com/e0/99/KwvVZSpg_o.png" alt="For items in a config list, it generates alternative recipes where all cobblestone is replaced with the vanilla tag #minecraft:stone_crafting_materials. Meaning you can craft these items using any item from the tag. By default, the tag includes Cobblestone, Blackstone, and Cobbled Deepslate. Config keys: use_stone_crafting_materials_list, use_stone_crafting_materials_enable"/>
 
