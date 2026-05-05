@@ -40,6 +40,7 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/e0/99/KwvVZSpg_o.png" alt="For items in a config list, it generates alternative recipes where all cobblestone is replaced with the vanilla tag #minecraft:stone_crafting_materials. Meaning you can craft these items using any item from the tag. By default, the tag includes Cobblestone, Blackstone, and Cobbled Deepslate. Config keys: use_stone_crafting_materials_list, use_stone_crafting_materials_enable"/>
 <img src="https://images2.imgbox.com/45/9c/r9GGEf2C_o.png" alt="Unlocks all recipes in the recipe book. Disabled by default. Config key: unlock_all_recipes"/>
 
+<p>&nbsp;</p>
 <center><p style="text-align: center;">
 <img src="https://images2.imgbox.com/2e/43/xp5ee5wo_o.png" alt="Requires Deimos Lib"/>
 <a href="https://www.curseforge.com/minecraft/mc-mods/deimos-fabric-forge-neoforge" rel="nofollow">
