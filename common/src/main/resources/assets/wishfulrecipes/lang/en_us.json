@@ -1,3 +1,47 @@
 {
-  "wishfulrecipes.deimosconfig.title": "wishfulrecipes Config"
+  "wishfulrecipes.deimosconfig.title": "Wishful Recipes Config",
+
+  "wishfulrecipes.deimosconfig.stairs_to_blocks_enable": "Slabs to blocks enable",
+  "wishfulrecipes.deimosconfig.stairs_to_blocks_amount": "Amount of block you get back from slabs",
+
+  "wishfulrecipes.deimosconfig.better_stairs_crafting_enable": "Better stairs recipe enable",
+  "wishfulrecipes.deimosconfig.better_stairs_crafting_amount": "Amount of stairs you get from better stairs recipe",
+
+  "wishfulrecipes.deimosconfig.slabs_to_blocks_enable": "Stairs to blocks enable",
+  "wishfulrecipes.deimosconfig.slabs_to_blocks_amount": "Amount of block you get back from stairs",
+
+  "wishfulrecipes.deimosconfig.walls_to_blocks_enable": "Walls to blocks enable",
+  "wishfulrecipes.deimosconfig.walls_to_blocks_amount": "Amount of block you get back from walls",
+
+  "wishfulrecipes.deimosconfig.blasting_raw_metal_blocks_enable": "Blasting raw metal blocks enable",
+  "wishfulrecipes.deimosconfig.blasting_raw_metal_blocks_cookingtime": "Cooking time of raw metal blocks",
+  "wishfulrecipes.deimosconfig.smelting_raw_metal_blocks_enable": "Smelting raw metal blocks enable",
+
+  "wishfulrecipes.deimosconfig.blast_to_glass_enable": "Blasting sand enable",
+
+  "wishfulrecipes.deimosconfig.blasting_stone_enable": "Blasting stone enable",
+
+  "wishfulrecipes.deimosconfig.extra_blasting_enable": "Extra blasting recipes enable",
+  "wishfulrecipes.deimosconfig.extra_blasting_list": "List of extra blasting recipes",
+
+  "wishfulrecipes.deimosconfig.extra_smelting_enable": "Extra smelting recipes enable",
+  "wishfulrecipes.deimosconfig.extra_smelting_list": "List of extra smelting recipes",
+
+  "wishfulrecipes.deimosconfig.extra_smoking_enable": "Extra smoking recipes enable",
+  "wishfulrecipes.deimosconfig.extra_smoking_list": "List of extra smoking recipes",
+
+  "wishfulrecipes.deimosconfig.backport_name_tag_enable": "Backport name tag recipes",
+  "wishfulrecipes.deimosconfig.backport_copper_trapdoor_enable": "Backport copper trapdoor recipe",
+  "wishfulrecipes.deimosconfig.backport_saddle_enable": "Backport saddle recipe",
+  "wishfulrecipes.deimosconfig.backport_lead_enable": "Backport lead recipe",
+  "wishfulrecipes.deimosconfig.backport_lodestone_enable": "Backport lodestone recipe",
+  "wishfulrecipes.deimosconfig.backport_bundle_enable": "Backport bundle recipe",
+
+  "wishfulrecipes.deimosconfig.unpacking_enable": "Enable unpacking recipes",
+  "wishfulrecipes.deimosconfig.unpacking_list": "List of unpacking recipes",
+
+  "wishfulrecipes.deimosconfig.use_stone_crafting_materials_enable": "Enable using stone materials tag in recipes",
+  "wishfulrecipes.deimosconfig.use_stone_crafting_materials_list": "List of recipes that should use stone material tag",
+
+  "wishfulrecipes.deimosconfig.unlock_all_recipes": "Unlock all recipes"
 }

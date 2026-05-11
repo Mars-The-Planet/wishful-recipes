@@ -18,11 +18,11 @@ public class WishfulRecipesConfig extends DeimosConfig {
     @Entry public static boolean walls_to_blocks_enable = true;
     @Entry public static int walls_to_blocks_amount = 1;
 
-    @Entry public static boolean blast_to_glass_enable = true;
-
     @Entry public static boolean blasting_raw_metal_blocks_enable = true;
     @Entry public static int blasting_raw_metal_blocks_cookingtime = 100;
     @Entry public static boolean smelting_raw_metal_blocks_enable = true;
+
+    @Entry public static boolean blast_to_glass_enable = true;
 
     @Entry public static boolean blasting_stone_enable = true;
 
@@ -57,13 +57,6 @@ public class WishfulRecipesConfig extends DeimosConfig {
     @Entry public static List<String> extra_smoking_list = Lists.newArrayList(
     );
 
-    @Entry public static boolean backport_name_tag_enable = true;
-    @Entry public static boolean backport_copper_trapdoor_enable = true;
-    @Entry public static boolean backport_saddle_enable = true;
-    @Entry public static boolean backport_lead_enable = true;
-    @Entry public static boolean backport_lodestone_enable = true;
-    @Entry public static boolean backport_bundle_enable = true;
-
     @Entry public static boolean unpacking_enable = true;
     @Entry public static List<String> unpacking_list = Lists.newArrayList(
             "packed_ice, ice, 9",
@@ -74,6 +67,13 @@ public class WishfulRecipesConfig extends DeimosConfig {
             "honeycomb_block, honeycomb, 4",
             "amethyst_block, amethyst_shard, 4"
     );
+
+    @Entry public static boolean backport_name_tag_enable = true;
+    @Entry public static boolean backport_copper_trapdoor_enable = true;
+    @Entry public static boolean backport_saddle_enable = true;
+    @Entry public static boolean backport_lead_enable = true;
+    @Entry public static boolean backport_lodestone_enable = true;
+    @Entry public static boolean backport_bundle_enable = true;
 
     @Entry public static boolean use_stone_crafting_materials_enable = true;
     @Entry public static List<String> use_stone_crafting_materials_list = Lists.newArrayList(
