@@ -18,6 +18,7 @@ public class CommonClass {
 
         if (blast_to_glass_enable) {
             // #minecraft:smelts_to_glass - works down to 1.19.4
+            // use below #breaks_decorated_pots
             DeimosRecipeGenerator.createBlastingJson("#minecraft:smelts_to_glass", "glass", 100, 0.1F);
         }
 
@@ -53,10 +54,11 @@ public class CommonClass {
         if (backport_name_tag_enable)
             DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList("paper", "#c:nuggets"), "name_tag", 1);
 
+        // copper trapdoor were added in 1.20.3
         // 1.21.9 becomes official
         // added in 1.20.3, officially in 1.21
-        if (backport_copper_trapdoor_enable)
-            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("copper_ingot"), Lists.newArrayList("AA", "AA"), "copper_trapdoor", 2);
+        // if (backport_copper_trapdoor_enable)
+        //    DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("copper_ingot"), Lists.newArrayList("AA", "AA"), "copper_trapdoor", 2);
 
         // 1.21.6 becomes official
         if (backport_saddle_enable)
