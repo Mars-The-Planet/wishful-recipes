@@ -211,24 +211,49 @@ public abstract class RecipeManagerMixin {
     private static String getResult(JsonObject recipe) {
         if (!recipe.has("result")) return null;
 
-        JsonObject resultObject = recipe.getAsJsonObject("result");
-        if (!resultObject.has("id")) return null;
+        JsonElement resultElement = recipe.get("result");
 
-        JsonElement idElement = resultObject.get("id");
-        if (!idElement.isJsonPrimitive() || !((JsonPrimitive) idElement).isString()) return null;
+        // 1.20.4 sometimes uses a string primitive for the result (e.g., stonecutting)
+        if (resultElement.isJsonPrimitive() && ((JsonPrimitive) resultElement).isString()) {
+            return resultElement.getAsString();
+        }
 
-        return idElement.getAsString();
+        if (!resultElement.isJsonObject()) return null;
+        JsonObject resultObject = resultElement.getAsJsonObject();
+
+        // 1.20.4 uses "item" instead of 1.20.6's "id"
+        if (!resultObject.has("item")) return null;
+
+        JsonElement itemElement = resultObject.get("item");
+        if (!itemElement.isJsonPrimitive() || !((JsonPrimitive) itemElement).isString()) return null;
+
+        return itemElement.getAsString();
     }
 
     @Unique
     private static int getCount(JsonObject recipe) {
         if (!recipe.has("result")) return 0;
 
-        JsonObject resultObject = recipe.getAsJsonObject("result");
-        if (!resultObject.has("count")) return 0;
+        JsonElement resultElement = recipe.get("result");
+
+        if (resultElement.isJsonPrimitive()) {
+            if (recipe.has("count")) {
+                JsonElement rootCount = recipe.get("count");
+                if (rootCount.isJsonPrimitive() && ((JsonPrimitive) rootCount).isNumber()) {
+                    return rootCount.getAsInt();
+                }
+            }
+            return 1;
+        }
+
+        if (!resultElement.isJsonObject()) return 0;
+        JsonObject resultObject = resultElement.getAsJsonObject();
+
+        // In 1.20.4, standard 1-item outputs completely omit the "count" tag
+        if (!resultObject.has("count")) return 1;
 
         JsonElement countElement = resultObject.get("count");
-        if (!countElement.isJsonPrimitive() || !((JsonPrimitive) countElement).isNumber()) return 0;
+        if (!countElement.isJsonPrimitive() || !((JsonPrimitive) countElement).isNumber()) return 1;
 
         return countElement.getAsInt();
     }
@@ -394,7 +419,7 @@ public abstract class RecipeManagerMixin {
         // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
-        
+
         String expected = "" + c + c + c;
         return rows[0].equals(expected) && rows[1].charAt(0) == c && rows[2].charAt(0) == c && rows[2].equals(expected);
     }
