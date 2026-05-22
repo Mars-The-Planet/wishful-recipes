@@ -39,6 +39,8 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <img src="https://images2.imgbox.com/e0/99/KwvVZSpg_o.png" alt="For items in a config list, it generates alternative recipes where all cobblestone is replaced with the vanilla tag #minecraft:stone_crafting_materials. Meaning you can craft these items using any item from the tag. By default, the tag includes Cobblestone, Blackstone, and Cobbled Deepslate. Config keys: use_stone_crafting_materials_list, use_stone_crafting_materials_enable"/>
 <img src="https://images2.imgbox.com/45/9c/r9GGEf2C_o.png" alt="Unlocks all recipes in the recipe book. Disabled by default. Config key: unlock_all_recipes"/>
 
+<p>If you want to learn in more detail how this mod and its config options work be sure to check out its <a href="https://github.com/Mars-The-Planet/wishful-recipes/wiki">wiki</a>. The dynamic recipe generation should make this mod highly compatible with other mods, but if you encounter any incompatible mods, please report it to me, and I will try to make them compatible. Also, when reporting this or any other bug, please do not forget to include the Minecraft version, mod loader, and the other mods you are using.</p>
+
 <p>&nbsp;</p>
 <center><p style="text-align: center;">
 <img src="https://images2.imgbox.com/2e/43/xp5ee5wo_o.png" alt="Requires Deimos Lib"/>
