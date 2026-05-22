@@ -23,7 +23,7 @@ public class TagLoaderMixin<T> {
         Map<ResourceLocation, List<TagLoader.EntryWithSource>> loadedTags = cir.getReturnValue();
 
         // accepting only item tags
-        if (!Objects.equals(this.directory, "tags/item")) return;
+        if (!Objects.equals(this.directory, "tags/items")) return;
 
         loadedTags.forEach((tagId, entries) -> {
             for (TagLoader.EntryWithSource entryWithSource : entries) {
