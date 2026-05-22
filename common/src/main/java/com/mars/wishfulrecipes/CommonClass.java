@@ -17,9 +17,8 @@ public class CommonClass {
         DeimosConfig.init(Constants.MOD_ID, WishfulRecipesConfig.class);
 
         if (blast_to_glass_enable) {
-            // #minecraft:smelts_to_glass - works down to 1.19.4
-            // use below #breaks_decorated_pots
-            DeimosRecipeGenerator.createBlastingJson("#minecraft:smelts_to_glass", "glass", 100, 0.1F);
+            for (String input : blast_to_glass_list)
+                DeimosRecipeGenerator.createBlastingJson(input, "glass", 100, 0.1F);
         }
 
         if (extra_blasting_enable) {

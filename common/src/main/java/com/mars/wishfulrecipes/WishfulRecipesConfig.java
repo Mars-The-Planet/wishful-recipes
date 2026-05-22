@@ -23,6 +23,7 @@ public class WishfulRecipesConfig extends DeimosConfig {
     @Entry public static boolean smelting_raw_metal_blocks_enable = true;
 
     @Entry public static boolean blast_to_glass_enable = true;
+    @Entry public static List<String> blast_to_glass_list = Lists.newArrayList("minecraft:sand", "minecraft:red_sand");
 
     @Entry public static boolean blasting_stone_enable = true;
 
