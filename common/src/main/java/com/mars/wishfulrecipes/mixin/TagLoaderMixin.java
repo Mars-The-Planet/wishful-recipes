@@ -1,6 +1,6 @@
 package com.mars.wishfulrecipes.mixin;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagLoader;
 import org.spongepowered.asm.mixin.Final;
@@ -19,8 +19,8 @@ public class TagLoaderMixin<T> {
     @Shadow @Final private String directory;
 
     @Inject(method = "load", at = @At("RETURN"))
-    private void onRecipesLoaded(ResourceManager resourceManager, CallbackInfoReturnable<Map<ResourceLocation, List<TagLoader.EntryWithSource>>> cir) {
-        Map<ResourceLocation, List<TagLoader.EntryWithSource>> loadedTags = cir.getReturnValue();
+    private void onRecipesLoaded(ResourceManager resourceManager, CallbackInfoReturnable<Map<Identifier, List<TagLoader.EntryWithSource>>> cir) {
+        Map<Identifier, List<TagLoader.EntryWithSource>> loadedTags = cir.getReturnValue();
 
         // accepting only item tags
         if (!Objects.equals(this.directory, "tags/item")) return;
