@@ -4,20 +4,25 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
@@ -28,8 +33,21 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 public abstract class RecipeManagerMixin {
     @Shadow @Final private HolderLookup.Provider registries;
 
-    @Inject(method = "apply*", at = @At("HEAD"))
-    private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
+    // @Inject(method = "apply*", at = @At("HEAD"))
+    // private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
+    @Inject(method = "prepare", at = @At(value = "TAIL"), cancellable = true)
+    private void interceptPrepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<RecipeMap> cir,
+                              @Local LocalRef<List<RecipeHolder<?>>> listRef) {
+
+        List<RecipeHolder<?>> list = listRef.get();
+        RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
+
+        // Convert parsed recipes back to JSON elements so your existing helper methods work
+        List<JsonElement> loadedRecipes = new ArrayList<>();
+        for (RecipeHolder<?> holder : list) {
+            Recipe.CODEC.encodeStart(ops, holder.value()).ifSuccess(loadedRecipes::add);
+        }
+
         // Key - Raw Metal Item
         // 0 - Raw Metal Item
         // 1 - Metal Item
@@ -43,7 +61,7 @@ public abstract class RecipeManagerMixin {
         Set<String> isStone = new HashSet<>();
 
         // first recipe loop
-        for (JsonElement recipeElement : map.values()) {
+        for (JsonElement recipeElement : loadedRecipes) {
             JsonObject recipe = recipeElement.getAsJsonObject();
             String result = getResult(recipe);
             if (result == null) continue;
@@ -136,7 +154,7 @@ public abstract class RecipeManagerMixin {
         }
 
         // second recipe loop
-        for (JsonElement recipeElement : map.values()) {
+        for (JsonElement recipeElement : loadedRecipes) {
             JsonObject recipe = recipeElement.getAsJsonObject();
             String result = getResult(recipe);
             if (result == null) continue;
@@ -194,7 +212,7 @@ public abstract class RecipeManagerMixin {
         if (!recipe.has("type")) return null;
 
         JsonElement typeElement = recipe.get("type");
-        if (!typeElement.isJsonPrimitive() || !((JsonPrimitive) typeElement).isString()) return null;
+        if (!typeElement.isJsonPrimitive() || !typeElement.getAsJsonPrimitive().isString()) return null;
 
         return typeElement.getAsString();
     }
@@ -203,79 +221,72 @@ public abstract class RecipeManagerMixin {
     private static float getExp(JsonObject recipe) {
         if (!recipe.has("experience")) return 0;
 
-        JsonElement typeElement = recipe.get("experience");
-        if (!typeElement.isJsonPrimitive() || !((JsonPrimitive) typeElement).isNumber()) return 0;
+        JsonElement expElement = recipe.get("experience");
+        if (!expElement.isJsonPrimitive() || !expElement.getAsJsonPrimitive().isNumber()) return 0;
 
-        return typeElement.getAsFloat();
+        return expElement.getAsFloat();
     }
 
     @Unique
     private static String getResult(JsonObject recipe) {
         if (!recipe.has("result")) return null;
+        JsonElement resultElement = recipe.get("result");
 
-        JsonObject resultObject = recipe.getAsJsonObject("result");
-        if (!resultObject.has("id")) return null;
+        // 1.21.3 format: Result can be just a primitive string e.g. "minecraft:iron_block"
+        if (resultElement.isJsonPrimitive() && resultElement.getAsJsonPrimitive().isString()) {
+            return resultElement.getAsString();
+        }
 
-        JsonElement idElement = resultObject.get("id");
-        if (!idElement.isJsonPrimitive() || !((JsonPrimitive) idElement).isString()) return null;
+        // Fallback for object format e.g. {"id": "minecraft:iron_block", "count": 1}
+        if (resultElement.isJsonObject()) {
+            JsonObject resultObject = resultElement.getAsJsonObject();
+            if (resultObject.has("id")) {
+                return resultObject.get("id").getAsString();
+            }
+        }
 
-        return idElement.getAsString();
+        return null;
     }
 
     @Unique
     private static int getCount(JsonObject recipe) {
         if (!recipe.has("result")) return 0;
+        JsonElement resultElement = recipe.get("result");
 
-        JsonObject resultObject = recipe.getAsJsonObject("result");
-        if (!resultObject.has("count")) return 0;
+        // 1.21.3 format: If it's just a string, count implicitly defaults to 1
+        if (resultElement.isJsonPrimitive() && resultElement.getAsJsonPrimitive().isString()) {
+            return 1;
+        }
 
-        JsonElement countElement = resultObject.get("count");
-        if (!countElement.isJsonPrimitive() || !((JsonPrimitive) countElement).isNumber()) return 0;
+        if (resultElement.isJsonObject()) {
+            JsonObject resultObject = resultElement.getAsJsonObject();
+            if (resultObject.has("count")) {
+                return resultObject.get("count").getAsInt();
+            }
+            return 1; // Explicit object without a count also defaults to 1
+        }
 
-        return countElement.getAsInt();
+        return 0;
     }
 
     @Unique
     private static String[] getIngredients(JsonObject recipe) {
         List<String> ingredientsList = new ArrayList<>();
 
-        // Ensure the element is a valid object before accessing fields
         if (recipe != null && recipe.isJsonObject()) {
-            JsonObject root = recipe.getAsJsonObject();
+            if (recipe.has("ingredient")) {
+                JsonElement ingredientElement = recipe.get("ingredient");
 
-            // Check if the "ingredient" member exists
-            if (root.has("ingredient")) {
-                JsonElement ingredientElement = root.get("ingredient");
-
-                // CASE 1: Ingredient is a single Object (e.g., {"item": "minecraft:raw_gold"})
-                if (ingredientElement.isJsonObject()) {
-                    JsonObject ingObj = ingredientElement.getAsJsonObject();
-                    if (ingObj.has("item")) {
-                        ingredientsList.add(ingObj.get("item").getAsString());
+                if (ingredientElement.isJsonArray()) {
+                    for (JsonElement ingItem : ingredientElement.getAsJsonArray()) {
+                        extractItemString(ingItem, ingredientsList);
                     }
-                    if (ingObj.has("tag")) {
-                        String tagName = ingObj.get("tag").getAsString();
-                        List<String> items = itemsInTags.get(tagName);
-                        if (items != null)
-                            ingredientsList.addAll(items);
-                    }
-                }
-                // CASE 2: Ingredient is an Array (e.g., [{"item":...}, {"item":...}])
-                else if (ingredientElement.isJsonArray()) {
-                    JsonArray ingArray = ingredientElement.getAsJsonArray();
-                    for (JsonElement ingItem : ingArray) {
-                        if (ingItem.isJsonObject()) {
-                            JsonObject ingObj = ingItem.getAsJsonObject();
-                            if (ingObj.has("item")) {
-                                ingredientsList.add(ingObj.get("item").getAsString());
-                            }
-                        }
-                    }
+                } else {
+                    extractItemString(ingredientElement, ingredientsList);
                 }
             }
         }
 
-        // Convert List to String Array
         return ingredientsList.toArray(new String[0]);
     }
 
@@ -283,33 +294,22 @@ public abstract class RecipeManagerMixin {
     private static String[] getKeys(JsonObject recipe) {
         List<String> items = new ArrayList<>();
 
-        // Ensure the element is a valid object
         if (recipe == null || !recipe.isJsonObject()) {
             return new String[0];
         }
 
-        JsonObject root = recipe.getAsJsonObject();
+        if (recipe.has("key")) {
+            JsonObject keyObject = recipe.getAsJsonObject("key");
 
-        // Check if the "key" object exists
-        if (root.has("key")) {
-            JsonObject keyObject = root.getAsJsonObject("key");
-
-            // Iterate through every character key (e.g., "#", "X")
             for (Map.Entry<String, JsonElement> entry : keyObject.entrySet()) {
                 JsonElement ingredient = entry.getValue();
 
-                // Case 1: The ingredient is a list of alternatives (JsonArray)
-                // Example: "key": { "#": [ {"item": "A"}, {"item": "B"} ] }
                 if (ingredient.isJsonArray()) {
-                    JsonArray alternatives = ingredient.getAsJsonArray();
-                    for (JsonElement alt : alternatives) {
-                        extractItemString(alt.getAsJsonObject(), items);
+                    for (JsonElement alt : ingredient.getAsJsonArray()) {
+                        extractItemString(alt, items);
                     }
-                }
-                // Case 2: The ingredient is a single object (JsonObject)
-                // Example: "key": { "#": {"item": "A"} }
-                else if (ingredient.isJsonObject()) {
-                    extractItemString(ingredient.getAsJsonObject(), items);
+                } else {
+                    extractItemString(ingredient, items);
                 }
             }
         }
@@ -318,16 +318,30 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
-    private static void extractItemString(JsonObject recipe, List<String> list) {
-        if (!recipe.isJsonObject()) return;
-
-        JsonObject obj = recipe.getAsJsonObject();
-
-        if (obj.has("item")) {
-            list.add(obj.get("item").getAsString());
+    private static void extractItemString(JsonElement element, List<String> list) {
+        // 1.21.3 format: Can be a direct string "#minecraft:logs" or "minecraft:iron_ingot"
+        if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            String str = element.getAsString();
+            if (str.startsWith("#")) {
+                String tag = str.substring(1);
+                if (itemsInTags.containsKey(tag)) {
+                    list.addAll(itemsInTags.get(tag));
+                }
+            } else {
+                list.add(str);
+            }
         }
-        else if (obj.has("tag") && itemsInTags.containsKey(obj.get("tag").getAsString())) {
-            list.addAll(itemsInTags.get(obj.get("tag").getAsString()));
+        // Legacy or explicit format {"item": "..."} or {"tag": "..."}
+        else if (element.isJsonObject()) {
+            JsonObject obj = element.getAsJsonObject();
+            if (obj.has("item")) {
+                list.add(obj.get("item").getAsString());
+            } else if (obj.has("tag")) {
+                String tag = obj.get("tag").getAsString();
+                if (itemsInTags.containsKey(tag)) {
+                    list.addAll(itemsInTags.get(tag));
+                }
+            }
         }
     }
 
@@ -349,7 +363,7 @@ public abstract class RecipeManagerMixin {
         String[] rows = new String[rightPatternArraySize];
         for (int i = 0; i < rightPatternArraySize; i++) {
             JsonElement rowElem = patternArray.get(i);
-            if (!rowElem.isJsonPrimitive() || !((JsonPrimitive) rowElem).isString()) return null;
+            if (!rowElem.isJsonPrimitive() || !rowElem.getAsJsonPrimitive().isString()) return null;
             rows[i] = rowElem.getAsString();
             if (rows[i].length() != 3) return null;
         }
@@ -362,11 +376,9 @@ public abstract class RecipeManagerMixin {
         String[] rows = basePatternCheck(recipe, 6, 2);
         if (rows == null) return false;
 
-        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
-        // Build the expected string line for this c:
         String expectedLine = "" + c + c + c;
         return rows[0].equals(expectedLine) && rows[1].equals(expectedLine);
     }
@@ -376,27 +388,23 @@ public abstract class RecipeManagerMixin {
         String[] rows = basePatternCheck(recipe, 1, 3);
         if (rows == null) return false;
 
-        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
-        // Build the expected string line for this c:
         String expectedLine = "" + c + c + c;
         return rows[0].equals(expectedLine) && rows[1].equals(expectedLine) && rows[2].equals(expectedLine);
     }
 
     @Unique
     private static boolean isMekanismRawBlockPattern(JsonObject recipe) {
-        // isnt golden apple
         if (!getResult(recipe).contains("block")) return false;
 
         String[] rows = basePatternCheck(recipe, 1, 3);
         if (rows == null) return false;
 
-        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
-        
+
         String expected = "" + c + c + c;
         return rows[0].equals(expected) && rows[1].charAt(0) == c && rows[2].charAt(0) == c && rows[2].equals(expected);
     }
@@ -406,7 +414,6 @@ public abstract class RecipeManagerMixin {
         String[] rows = basePatternCheck(recipe, 6, 1);
         if (rows == null) return false;
 
-        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 
@@ -419,7 +426,6 @@ public abstract class RecipeManagerMixin {
         String[] rows = basePatternCheck(recipe, 0, 3);
         if (rows == null) return false;
 
-        // Extract the candidate character
         char c = rows[0].charAt(0);
         if (c == ' ') return false;
 

@@ -70,7 +70,7 @@ public class CommonClass {
 
         // 1.21.2 becomes official
         // added in 1.17, made accessible using datapack in 1.19.3, officially in 1.21.2
-        if (backport_bundle_enable)
-            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string", "leather"), Lists.newArrayList("A", "B"), "bundle", 1);
+        //if (backport_bundle_enable)
+        //    DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string", "leather"), Lists.newArrayList("A", "B"), "bundle", 1);
     }
 }
