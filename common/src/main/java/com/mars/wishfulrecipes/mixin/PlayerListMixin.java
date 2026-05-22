@@ -20,7 +20,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     private void placeNewPlayer(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         if (!unlock_all_recipes) return;
-        Collection<RecipeHolder<?>> allRecipes = player.server.getRecipeManager().getRecipes();
+        Collection<RecipeHolder<?>> allRecipes = player.getServer().getRecipeManager().getRecipes();
         player.awardRecipes(allRecipes);
     }
 }
