@@ -26,6 +26,7 @@ public class TagLoaderMixin<T> {
     private void onRecipesLoaded(ResourceManager resourceManager, CallbackInfoReturnable<Map<ResourceLocation, Tag.Builder>> cir) {
         Map<ResourceLocation, Tag.Builder> loadedTags = cir.getReturnValue();
 
+        // accepting only item tags
         if (!Objects.equals(this.directory, "tags/items")) return;
 
         loadedTags.forEach((tagId, builder) -> {
