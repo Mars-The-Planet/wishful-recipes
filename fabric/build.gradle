@@ -16,6 +16,7 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
+    implementation "maven.modrinth:deimos:${project.minecraft_version}-fabric-${project.deimos_version}"
     compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
