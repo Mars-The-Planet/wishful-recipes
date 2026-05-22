@@ -26,8 +26,6 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 @Mixin(RecipeManager.class)
 public abstract class RecipeManagerMixin {
-    @Shadow @Final private HolderLookup.Provider registries;
-
     @Inject(method = "apply*", at = @At("HEAD"))
     private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
         // Key - Raw Metal Item
