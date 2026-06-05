@@ -1,16 +1,15 @@
 <h1><img src="https://iili.io/BujtGQs.png" alt="Title"/></h1>
-<center><h5 style="text-align: center;"><strong> 
-<a href="https://discord.gg/2CUh6gMuCt" ><img src="https://img.shields.io/discord/1027252425960198165?color=5b6ee1&amp;label=Discord&amp;style=for-the-badge&amp;logo=discord&amp;logoColor=white" alt="Discord" /></a> 
-<a href="https://patreon.com/MarsThePlanet"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DMarsThePlanet%26type%3Dpatrons&amp;style=for-the-badge" alt="Support me on Patreon" /></a> 
+<center><h5 style="text-align: center;"><strong>
+<a href="https://discord.gg/2CUh6gMuCt" ><img src="https://img.shields.io/discord/1027252425960198165?color=5b6ee1&amp;label=Discord&amp;style=for-the-badge&amp;logo=discord&amp;logoColor=white" alt="Discord" /></a>
+<a href="https://patreon.com/MarsThePlanet"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DMarsThePlanet%26type%3Dpatrons&amp;style=for-the-badge" alt="Support me on Patreon" /></a>
 <a href="https://www.curseforge.com/minecraft/mc-mods/wishful-recipes" ><img src="https://img.shields.io/curseforge/dt/1550925?color=F16436&amp;logo=curseforge&amp;logoColor=white&amp;label=Curseforge&amp;style=for-the-badge" alt="CurseForge" /></a>
 <a href="https://modrinth.com/mod/wishful-recipes" ><img src="https://img.shields.io/modrinth/dt/wishful-recipes?style=for-the-badge&amp;logo=modrinth&amp;logoColor=white&amp;label=modrinth&amp;color=00AF5C" alt="Modrinth" /></a>
 </strong></h5></center>
 
-<center><p style="text-align: center;"> 
+<center><p style="text-align: center;">
 Wishful recipes is a fully configurable server-side mod. Adding a bunch of recipes that should already be part of the base game. It's highly compatible with other mods, thanks to its ability to scan already loaded recipes and to generate new ones based on them.
 </p></center>
 
-<p>&nbsp;</p>
 <h3><img src="https://images2.imgbox.com/ab/f6/ApNJBv7D_o.png" alt="DYNAMIC RECIPES"/></h3>
 <img src="https://iili.io/BAGo5RS.png" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
 <img src="https://images2.imgbox.com/00/e1/aTKTyhmd_o.png" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
@@ -27,21 +26,59 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <p>&nbsp;</p>
 <h3><img src="https://images2.imgbox.com/cb/18/07t06sU6_o.png" alt="BACKPORTED RECIPES"/></h3>
 <img src="https://images2.imgbox.com/7c/72/RfU1V9Xq_o.png" alt="Name tag backport from 26.1"/>
-<img src="https://images2.imgbox.com/ab/7e/PpOOIUXF_o.png" alt="Name tag backport from 1.21.9"/>
-<img src="https://images2.imgbox.com/33/e5/sL6IVpvt_o.png" alt="Name tag backport from 1.21.6"/>
-<img src="https://images2.imgbox.com/7d/e5/KKSz9q61_o.png" alt="Name tag backport from 1.21.6"/>
-<img src="https://images2.imgbox.com/19/1a/Sye4bKGV_o.png" alt="Name tag backport from 1.21.5"/>
-<img src="https://images2.imgbox.com/c6/55/BNbGq2Vh_o.png" alt="Name tag backport from 1.21.2"/>
+<img src="https://images2.imgbox.com/ab/7e/PpOOIUXF_o.png" alt="Copper trapdoor backport from 1.21.9"/>
+<img src="https://images2.imgbox.com/33/e5/sL6IVpvt_o.png" alt="Lead backport from 1.21.6"/>
+<img src="https://images2.imgbox.com/7d/e5/KKSz9q61_o.png" alt="Saddle backport from 1.21.6"/>
+<img src="https://images2.imgbox.com/19/1a/Sye4bKGV_o.png" alt="Lodestone backport from 1.21.5"/>
+<img src="https://images2.imgbox.com/c6/55/BNbGq2Vh_o.png" alt="Bundle backport from 1.21.2"/>
 
 <p>&nbsp;</p>
 <h3><img src="https://images2.imgbox.com/0f/c5/O0jhZjNo_o.png" alt="MISCELLANEOUS FEATURES"/></h3>
 <img src="https://images2.imgbox.com/6b/c7/EvZvkK4f_o.png" alt="Generates unpacking recipes set by a list in the config file. By default, it adds a unpacking recipes for Clay, Snow Blocks, Packed Ice, Blue Ice, White Wool, Blocks of Amethyst, and Honeycomb Blocks. The unpacking_list config option consists of lines that look like this: blue_ice, packed_ice, 9. The first part is the input item, the second part is the output item and third part is the number of output items Config keys: unpacking_list, unpacking_enable"/>
 <img src="https://images2.imgbox.com/e0/99/KwvVZSpg_o.png" alt="For items in a config list, it generates alternative recipes where all cobblestone is replaced with the vanilla tag #minecraft:stone_crafting_materials. Meaning you can craft these items using any item from the tag. By default, the tag includes Cobblestone, Blackstone, and Cobbled Deepslate. Config keys: use_stone_crafting_materials_list, use_stone_crafting_materials_enable"/>
 <img src="https://images2.imgbox.com/45/9c/r9GGEf2C_o.png" alt="Unlocks all recipes in the recipe book. Disabled by default. Config key: unlock_all_recipes"/>
+<br />
 
+<details>
+  <summary>Description transcript for accessibility</summary>
+  <br>
+  <strong>Dynamic Recipes</strong>
+  <ul>
+    <li>Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant.</li>
+    <li>Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield.</li>
+    <li>Automatically generates shapeless recipes that convert stairs into their full block variants.</li>
+    <li>Automatically generates shapeless recipes that convert walls into their full block variants.</li>
+    <li>Automatically generates blasting recipes for full blocks of raw metals. (Optionally also smelting recipes)</li>
+    <li>Adds blasting recipes for all stonecutter-compatible blocks that can be smelted.</li>
+  </ul>
+  
+  <strong>Blasting Recipes</strong>
+  <ul>
+    <li>Adds blasting recipes for sand and red sand.</li>
+    <li>Generates blasting recipes set by a list in the config file. By default, it adds a blasting recipe for Terracotta, Clay Balls, Clay, and Netherrack. The <code>extra_blasting_list</code> config option consists of lines that look like this: <code>minecraft:netherrack, minecraft:nether_brick, 0.1</code>. The first part is the input item, the second part is the output item and the third one is the experience granted. Config keys: <code>extra_blasting_enable</code>, <code>extra_blasting_list</code></li>
+  </ul>
+
+  <strong>Backported Recipes</strong>
+  <ul>
+    <li>Adds a crafting recipe for the Name Tag, officially added in 26.1.</li>
+    <li>Adds a crafting recipe for the Copper Trapdoor, officially added in 1.21.9, using four Copper Ingots.</li>
+    <li>Adds a crafting recipe for Lead, officially added in 1.21.6, using five pieces of String.</li>
+    <li>Adds a crafting recipe for the Saddle, officially added in 1.21.6, using two Leathers and an Iron Ingot.</li>
+    <li>Adds a crafting recipe for the Lodestone, officially added in 1.21.5, using four Chiseled Nether Bricks and an Iron Ingot.</li>
+    <li>Adds a crafting recipe for the Bundle, officially added in 1.21.2, using two Leathers and a piece of String.</li>
+  </ul>
+
+  <strong>Miscellaneous Features</strong>
+  <ul>
+    <li>Generates unpacking recipes set by a list in the config file. By default, it adds unpacking recipes for Clay, Snow Blocks, Packed Ice, Blue Ice, White Wool, Blocks of Amethyst, and Honeycomb Blocks. The <code>unpacking_list</code> config option consists of lines that look like this: <code>blue_ice, packed_ice, 9</code>. The first part is the input item, the second part is the output item and third part is the number of output items. Config keys: <code>unpacking_list</code>, <code>unpacking_enable</code></li>
+    <li>For items in a config list, it generates alternative recipes where all cobblestone is replaced with the vanilla tag <code>#minecraft:stone_crafting_materials</code>. Meaning you can craft these items using any item from the tag. By default, the tag includes Cobblestone, Blackstone, and Cobbled Deepslate. Config keys: <code>use_stone_crafting_materials_list</code>, <code>use_stone_crafting_materials_enable</code></li>
+    <li>Unlocks all recipes in the recipe book. Disabled by default. Config key: <code>unlock_all_recipes</code></li>
+  </ul>
+</details>
+
+<br />
 <p>If you want to learn in more detail how this mod and its config options work be sure to check out its <a href="https://github.com/Mars-The-Planet/wishful-recipes/wiki">wiki</a>. The dynamic recipe generation should make this mod highly compatible with other mods, but if you encounter any incompatible mods, please report it to me, and I will try to make them compatible. Also, when reporting this or any other bug, please do not forget to include the Minecraft version, mod loader, and the other mods you are using.</p>
 
-<p>&nbsp;</p>
 <center><p style="text-align: center;">
 <img src="https://images2.imgbox.com/2e/43/xp5ee5wo_o.png" alt="Requires Deimos Lib"/>
 <a href="https://www.curseforge.com/minecraft/mc-mods/deimos-fabric-forge-neoforge" rel="nofollow">
