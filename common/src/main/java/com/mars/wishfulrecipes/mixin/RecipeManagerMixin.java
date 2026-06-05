@@ -39,136 +39,143 @@ public abstract class RecipeManagerMixin {
 
         // first recipe loop
         for (JsonElement recipeElement : map.values()) {
-            JsonObject recipe = recipeElement.getAsJsonObject();
-            String result = getResult(recipe);
-            if (result == null) continue;
+            try {
+                JsonObject recipe = recipeElement.getAsJsonObject();
+                String result = getResult(recipe);
+                if (result == null) continue;
 
-            // looking for items in stonecutting recipes
-            if (getIngredients(recipe).length > 0 && blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:stonecutting")) {
-                isStone.addAll(Arrays.asList(getIngredients(recipe)));
-            }
+                // looking for items in stonecutting recipes
+                if (getIngredients(recipe).length > 0 && blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:stonecutting")) {
+                    isStone.addAll(Arrays.asList(getIngredients(recipe)));
+                }
 
-            // checking whether item has a blasting recipe
-            if (blasting_raw_metal_blocks_enable && Objects.equals(getType(recipe), "minecraft:blasting")) {
-                String[] ingredients = getIngredients(recipe);
-                for (String ingredient : ingredients) {
-                    if (!isRawMetal.containsKey(ingredient)) {
-                        isRawMetal.put(ingredient, new String[]{ingredient, result, "", "", String.valueOf(getExp(recipe))});
+                // checking whether item has a blasting recipe
+                if (blasting_raw_metal_blocks_enable && Objects.equals(getType(recipe), "minecraft:blasting")) {
+                    String[] ingredients = getIngredients(recipe);
+                    for (String ingredient : ingredients) {
+                        if (!isRawMetal.containsKey(ingredient)) {
+                            isRawMetal.put(ingredient, new String[]{ingredient, result, "", "", String.valueOf(getExp(recipe))});
+                        }
                     }
                 }
-            }
 
-            // slabs to blocks
-            if (hasSlabPattern(recipe) && slabs_to_blocks_enable) {
-                String[] keys = getKeys(recipe);
+                // slabs to blocks
+                if (hasSlabPattern(recipe) && slabs_to_blocks_enable) {
+                    String[] keys = getKeys(recipe);
 
-                for (String key : keys) {
-                    if (key == null) continue;
-                    DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList(result, result), key, slabs_to_blocks_amount);
-                }
-            }
-
-            if (hasStairsPattern(recipe)) {
-                String[] keys = getKeys(recipe);
-                for (String key : keys) {
-                    if (key == null) continue;
-
-                    if (better_stairs_crafting_enable) {
-                        DeimosRecipeGenerator.createShapedRecipeJson(
-                                Lists.newArrayList(key),
-                                Lists.newArrayList("# ", "##"),
-                                result,
-                                better_stairs_crafting_amount
-                        );
+                    for (String key : keys) {
+                        if (key == null) continue;
+                        DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList(result, result), key, slabs_to_blocks_amount);
                     }
-
-                    if (stairs_to_blocks_enable) DeimosRecipeGenerator.createItemConvertorJson(result, key, stairs_to_blocks_amount);
                 }
-            }
 
-            // walls to blocks
-            if (hasWallPattern(recipe) && walls_to_blocks_enable) {
-                String[] keys = getKeys(recipe);
+                if (hasStairsPattern(recipe)) {
+                    String[] keys = getKeys(recipe);
+                    for (String key : keys) {
+                        if (key == null) continue;
 
-                for (String key : keys) {
-                    if (key == null) continue;
-                    DeimosRecipeGenerator.createItemConvertorJson(result, key, walls_to_blocks_amount);
+                        if (better_stairs_crafting_enable) {
+                            DeimosRecipeGenerator.createShapedRecipeJson(
+                                    Lists.newArrayList(key),
+                                    Lists.newArrayList("# ", "##"),
+                                    result,
+                                    better_stairs_crafting_amount
+                            );
+                        }
+
+                        if (stairs_to_blocks_enable) DeimosRecipeGenerator.createItemConvertorJson(result, key, stairs_to_blocks_amount);
+                    }
                 }
-            }
 
-            // use use_stone_crafting_materials tag instead of cobblestone
-            if (use_stone_crafting_materials_enable) {
-                if (use_stone_crafting_materials_list.contains(result)) {
-                    JsonObject recipeCopy = recipe.deepCopy();
+                // walls to blocks
+                if (hasWallPattern(recipe) && walls_to_blocks_enable) {
+                    String[] keys = getKeys(recipe);
 
-                    if (recipeCopy.has("key") && recipeCopy.get("key").isJsonObject()) {
-                        JsonObject keyObject = recipeCopy.getAsJsonObject("key");
+                    for (String key : keys) {
+                        if (key == null) continue;
+                        DeimosRecipeGenerator.createItemConvertorJson(result, key, walls_to_blocks_amount);
+                    }
+                }
 
-                        // Iterate through every character mapping inside the "key" object
-                        for (Map.Entry<String, JsonElement> entry : keyObject.entrySet()) {
-                            JsonElement ingredientElement = entry.getValue();
+                // use use_stone_crafting_materials tag instead of cobblestone
+                if (use_stone_crafting_materials_enable) {
+                    if (use_stone_crafting_materials_list.contains(result)) {
+                        JsonObject recipeCopy = recipe.deepCopy();
 
-                            // Ensure the ingredient mapping is a standard JsonObject
-                            if (ingredientElement.isJsonObject()) {
-                                JsonObject ingredientObject = ingredientElement.getAsJsonObject();
+                        if (recipeCopy.has("key") && recipeCopy.get("key").isJsonObject()) {
+                            JsonObject keyObject = recipeCopy.getAsJsonObject("key");
 
-                                // Check if it explicitly declares "item" as "minecraft:cobblestone"
-                                if (ingredientObject.has("item") &&
-                                        ingredientObject.get("item").isJsonPrimitive() &&
-                                        ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
+                            // Iterate through every character mapping inside the "key" object
+                            for (Map.Entry<String, JsonElement> entry : keyObject.entrySet()) {
+                                JsonElement ingredientElement = entry.getValue();
 
-                                    // Replace the "item" definition with the "tag" definition
-                                    ingredientObject.remove("item");
-                                    ingredientObject.addProperty("tag", "minecraft:stone_crafting_materials");
+                                // Ensure the ingredient mapping is a standard JsonObject
+                                if (ingredientElement.isJsonObject()) {
+                                    JsonObject ingredientObject = ingredientElement.getAsJsonObject();
+
+                                    // Check if it explicitly declares "item" as "minecraft:cobblestone"
+                                    if (ingredientObject.has("item") &&
+                                            ingredientObject.get("item").isJsonPrimitive() &&
+                                            ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
+
+                                        // Replace the "item" definition with the "tag" definition
+                                        ingredientObject.remove("item");
+                                        ingredientObject.addProperty("tag", "minecraft:stone_crafting_materials");
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    DeimosRecipeGenerator.RECIPES.add(recipeCopy);
+                        DeimosRecipeGenerator.RECIPES.add(recipeCopy);
+                    }
                 }
             }
+            catch (Exception ignored) {}
+
         }
 
         // second recipe loop
         for (JsonElement recipeElement : map.values()) {
-            JsonObject recipe = recipeElement.getAsJsonObject();
-            String result = getResult(recipe);
-            if (result == null) continue;
+            try {
+                JsonObject recipe = recipeElement.getAsJsonObject();
+                String result = getResult(recipe);
+                if (result == null) continue;
 
-            // to check for the rest of metal blasting properties
-            if (blasting_raw_metal_blocks_enable && (hasFullBlockPattern(recipe) || isMekanismRawBlockPattern(recipe))) {
-                String[] keys = getKeys(recipe);
+                // to check for the rest of metal blasting properties
+                if (blasting_raw_metal_blocks_enable && (hasFullBlockPattern(recipe) || isMekanismRawBlockPattern(recipe))) {
+                    String[] keys = getKeys(recipe);
 
-                for (String key : keys) {
-                    if (key == null) continue;
+                    for (String key : keys) {
+                        if (key == null) continue;
 
-                    // for raw metal blocks
-                    if (isRawMetal.containsKey(key)) {
-                        String[] items = isRawMetal.get(key);
-                        items[2] = result;
-                        isRawMetal.put(key, items);
-                    }
+                        // for raw metal blocks
+                        if (isRawMetal.containsKey(key)) {
+                            String[] items = isRawMetal.get(key);
+                            items[2] = result;
+                            isRawMetal.put(key, items);
+                        }
 
-                    // for metal blocks
-                    for (Map.Entry<String, String[]> entry: isRawMetal.entrySet()) {
-                        String[] items = entry.getValue();
-                        if (items[1].equals(key)) {
-                            items[3] = getResult(recipe);
-                            entry.setValue(items);
+                        // for metal blocks
+                        for (Map.Entry<String, String[]> entry: isRawMetal.entrySet()) {
+                            String[] items = entry.getValue();
+                            if (items[1].equals(key)) {
+                                items[3] = getResult(recipe);
+                                entry.setValue(items);
+                            }
                         }
                     }
                 }
-            }
 
-            if (blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:smelting")) {
-                String[] ingredients = getIngredients(recipe);
+                if (blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:smelting")) {
+                    String[] ingredients = getIngredients(recipe);
 
-                for (String ingredient : ingredients) {
-                    if (isStone.contains(ingredient) || isStone.contains(getResult(recipe)))
-                        DeimosRecipeGenerator.createBlastingJson(ingredient, result, 100, getExp(recipe));
+                    for (String ingredient : ingredients) {
+                        if (isStone.contains(ingredient) || isStone.contains(getResult(recipe)))
+                            DeimosRecipeGenerator.createBlastingJson(ingredient, result, 100, getExp(recipe));
+                    }
                 }
             }
+            catch (Exception ignored) {}
         }
 
         // blasting raw metal blocks
