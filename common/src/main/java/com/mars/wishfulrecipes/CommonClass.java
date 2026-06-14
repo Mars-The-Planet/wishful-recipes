@@ -12,6 +12,7 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 public class CommonClass {
     public static Map<String, List<String>> itemsInTags = new HashMap<>();
+    public static Boolean alreadyGeneratedRecipes = false;
 
     public static void init() {
         DeimosConfig.init(Constants.MOD_ID, WishfulRecipesConfig.class);
