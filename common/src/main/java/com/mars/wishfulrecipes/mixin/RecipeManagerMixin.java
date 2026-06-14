@@ -191,7 +191,7 @@ public abstract class RecipeManagerMixin {
             }
         }
 
-        alreadyGeneratedRecipes = false;
+        alreadyGeneratedRecipes = true;
     }
 
     @Unique
