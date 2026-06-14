@@ -6,14 +6,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.RecipeManager;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+import static com.mars.wishfulrecipes.CommonClass.alreadyGeneratedRecipes;
 import static com.mars.wishfulrecipes.CommonClass.itemsInTags;
 import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
@@ -28,6 +26,8 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 public abstract class RecipeManagerMixin {
     @Inject(method = "apply*", at = @At("HEAD"))
     private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
+        if (alreadyGeneratedRecipes) return;
+
         // Key - Raw Metal Item
         // 0 - Raw Metal Item
         // 1 - Metal Item
@@ -191,6 +191,8 @@ public abstract class RecipeManagerMixin {
                     DeimosRecipeGenerator.createSmeltingJson(items[2], items[3], 2 * blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
             }
         }
+
+        alreadyGeneratedRecipes = true;
     }
 
     @Unique
