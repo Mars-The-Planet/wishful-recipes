@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+import static com.mars.wishfulrecipes.CommonClass.alreadyGeneratedRecipes;
 import static com.mars.wishfulrecipes.CommonClass.itemsInTags;
 import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
@@ -25,6 +26,8 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 public abstract class RecipeManagerMixin {
     @Inject(method = "apply*", at = @At("HEAD"))
     private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
+        if (alreadyGeneratedRecipes) return;
+
         // Key - Raw Metal Item
         // 0 - Raw Metal Item
         // 1 - Metal Item
@@ -189,6 +192,8 @@ public abstract class RecipeManagerMixin {
                     DeimosRecipeGenerator.createSmeltingJson(items[2], items[3], 2 * blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
             }
         }
+
+        alreadyGeneratedRecipes = true;
     }
 
     @Unique
