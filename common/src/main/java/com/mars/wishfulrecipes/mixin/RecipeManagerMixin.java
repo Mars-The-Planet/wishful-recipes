@@ -214,7 +214,7 @@ public abstract class RecipeManagerMixin {
                     DeimosRecipeGenerator.createSmeltingJson(items[2], items[3], 2 * blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
             }
         }
-        alreadyGeneratedRecipes = false;
+        alreadyGeneratedRecipes = true;
     }
 
     @Unique
