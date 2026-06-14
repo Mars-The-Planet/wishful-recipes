@@ -12,6 +12,7 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 public class CommonClass {
     public static Map<String, List<String>> itemsInTags = new HashMap<>();
+    public static Boolean alreadyGeneratedRecipes = false;
 
     public static void init() {
         DeimosConfig.init(Constants.MOD_ID, WishfulRecipesConfig.class);
@@ -59,14 +60,14 @@ public class CommonClass {
             DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("copper_ingot"), Lists.newArrayList("AA", "AA"), "copper_trapdoor", 2);
 
         // 1.21.6 becomes official
-        if (backport_saddle_enable)
-            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("leather", "iron_ingot"), Lists.newArrayList(" A ", "ABA"), "saddle", 1);
-        if (backport_lead_enable)
-            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string"), Lists.newArrayList("AA ", "AA ", "  A"), "lead", 2);
+//        if (backport_saddle_enable)
+//            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("leather", "iron_ingot"), Lists.newArrayList(" A ", "ABA"), "saddle", 1);
+//        if (backport_lead_enable)
+//            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("string"), Lists.newArrayList("AA ", "AA ", "  A"), "lead", 2);
 
         // 1.21.5 becomes official
-        if (backport_lodestone_enable)
-            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("chiseled_stone_bricks", "iron_ingot"), Lists.newArrayList("AAA", "ABA", "AAA"), "lodestone", 1);
+//        if (backport_lodestone_enable)
+//            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList("chiseled_stone_bricks", "iron_ingot"), Lists.newArrayList("AAA", "ABA", "AAA"), "lodestone", 1);
 
         // 1.21.2 becomes official
         // added in 1.17, made accessible using datapack in 1.19.3, officially in 1.21.2
