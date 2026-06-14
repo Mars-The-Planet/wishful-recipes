@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
+import static com.mars.wishfulrecipes.CommonClass.alreadyGeneratedRecipes;
 import static com.mars.wishfulrecipes.CommonClass.itemsInTags;
 import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
@@ -33,11 +34,10 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 public abstract class RecipeManagerMixin {
     @Shadow @Final private HolderLookup.Provider registries;
 
-    // @Inject(method = "apply*", at = @At("HEAD"))
-    // private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
     @Inject(method = "prepare", at = @At(value = "TAIL"), cancellable = true)
     private void interceptPrepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<RecipeMap> cir,
                               @Local LocalRef<List<RecipeHolder<?>>> listRef) {
+        if (alreadyGeneratedRecipes) return;
 
         List<RecipeHolder<?>> list = listRef.get();
         RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
@@ -214,6 +214,7 @@ public abstract class RecipeManagerMixin {
                     DeimosRecipeGenerator.createSmeltingJson(items[2], items[3], 2 * blasting_raw_metal_blocks_cookingtime, 9 * Float.parseFloat(items[4]));
             }
         }
+        alreadyGeneratedRecipes = false;
     }
 
     @Unique
