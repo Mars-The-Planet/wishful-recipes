@@ -12,6 +12,7 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 public class CommonClass {
     public static Map<String, List<String>> itemsInTags = new HashMap<>();
+    public static Boolean alreadyGeneratedRecipes = false;
 
     public static void init() {
         DeimosConfig.init(Constants.MOD_ID, WishfulRecipesConfig.class);
@@ -49,6 +50,7 @@ public class CommonClass {
             }
         }
 
+        // Backported Recipes
         // 26.1 becomes official
         if (backport_name_tag_enable)
             DeimosRecipeGenerator.createShapelessRecipeJson(Lists.newArrayList("paper", "#c:nuggets"), "name_tag", 1);
