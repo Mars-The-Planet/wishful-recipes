@@ -4,26 +4,21 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.google.gson.JsonParser;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeMap;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.io.Reader;
 import java.util.*;
 
 import static com.mars.wishfulrecipes.CommonClass.alreadyGeneratedRecipes;
@@ -32,22 +27,20 @@ import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 @Mixin(RecipeManager.class)
 public abstract class RecipeManagerMixin {
-    @Shadow @Final private HolderLookup.Provider registries;
 
     // @Inject(method = "apply*", at = @At("HEAD"))
     // private void onRecipesLoaded(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
-    @Inject(method = "prepare", at = @At(value = "TAIL"), cancellable = true)
-    private void interceptPrepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<RecipeMap> cir,
-                              @Local LocalRef<List<RecipeHolder<?>>> listRef) {
+    @Inject(method = "prepare", at = @At(value = "TAIL"))
+    private void interceptPrepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<RecipeMap> cir) {
         if (alreadyGeneratedRecipes) return;
 
-        List<RecipeHolder<?>> list = listRef.get();
-        RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
-
-        // Convert parsed recipes back to JSON elements so your existing helper methods work
         List<JsonElement> loadedRecipes = new ArrayList<>();
-        for (RecipeHolder<?> holder : list) {
-            Recipe.CODEC.encodeStart(ops, holder.value()).ifSuccess(loadedRecipes::add);
+
+        // Intercept and parse raw JSON files before the game evaluates tags
+        for (Map.Entry<ResourceLocation, Resource> entry : resourceManager.listResources("recipe", id -> id.getPath().endsWith(".json")).entrySet()) {
+            try (Reader reader = entry.getValue().openAsReader()) {
+                loadedRecipes.add(JsonParser.parseReader(reader));
+            } catch (Exception ignored) {}
         }
 
         // Key - Raw Metal Item
