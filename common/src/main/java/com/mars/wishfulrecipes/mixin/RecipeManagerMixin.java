@@ -1,18 +1,12 @@
 package com.mars.wishfulrecipes.mixin;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.google.gson.*;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeMap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,18 +22,19 @@ import static com.mars.wishfulrecipes.CommonClass.alreadyGeneratedRecipes;
 import static com.mars.wishfulrecipes.CommonClass.itemsInTags;
 import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
+
 @Mixin(RecipeManager.class)
 public abstract class RecipeManagerMixin {
 
     @Inject(method = "prepare", at = @At(value = "TAIL"))
-    private void interceptPrepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<RecipeMap> cir,
-                              @Local LocalRef<List<RecipeHolder<?>>> listRef) {
+    private void interceptPrepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<RecipeMap> cir) {
         if (alreadyGeneratedRecipes) return;
 
         List<JsonElement> loadedRecipes = new ArrayList<>();
 
-        // Intercept and parse raw JSON files before the game evaluates tags
+        // Intercept and parse raw JSON files using listResources
         for (Map.Entry<Identifier, Resource> entry : resourceManager.listResources("recipe", id -> id.getPath().endsWith(".json")).entrySet()) {
+            // Use openAsReader() to get the BufferedReader
             try (Reader reader = entry.getValue().openAsReader()) {
                 loadedRecipes.add(JsonParser.parseReader(reader));
             } catch (Exception ignored) {}
@@ -63,7 +58,10 @@ public abstract class RecipeManagerMixin {
             {
                 JsonObject recipe = recipeElement.getAsJsonObject();
                 String result = getResult(recipe);
-                if (result == null) continue;
+                if (result == null) {
+                    //System.out.println("SKIPPED (Result was null): " + recipe);
+                    continue;
+                }
 
                 // looking for items in stonecutting recipes
                 if (getIngredients(recipe).length > 0 && blasting_stone_enable && Objects.equals(getType(recipe), "minecraft:stonecutting")) {
@@ -122,28 +120,34 @@ public abstract class RecipeManagerMixin {
                 // use use_stone_crafting_materials tag instead of cobblestone
                 if (use_stone_crafting_materials_enable) {
                     if (use_stone_crafting_materials_list.contains(result)) {
+                        System.out.println("result: " + result + " | recipe: " + recipe);
                         JsonObject recipeCopy = recipe.deepCopy();
 
+                        // 1. SHAPED RECIPES (Checking the "key" object)
                         if (recipeCopy.has("key") && recipeCopy.get("key").isJsonObject()) {
                             JsonObject keyObject = recipeCopy.getAsJsonObject("key");
 
-                            // Iterate through every character mapping inside the "key" object
                             for (Map.Entry<String, JsonElement> entry : keyObject.entrySet()) {
-                                JsonElement ingredientElement = entry.getValue();
+                                String mapKey = entry.getKey();
+                                boolean isCobblestone = isIsCobblestone(entry.getValue());
 
-                                // Ensure the ingredient mapping is a standard JsonObject
-                                if (ingredientElement.isJsonObject()) {
-                                    JsonObject ingredientObject = ingredientElement.getAsJsonObject();
+                                if (isCobblestone) {
+                                    // 1.21.2+ Standard: Replace the entire definition with a primitive string
+                                    keyObject.addProperty(mapKey, "#minecraft:stone_crafting_materials");
+                                }
+                            }
+                        }
 
-                                    // Check if it explicitly declares "item" as "minecraft:cobblestone"
-                                    if (ingredientObject.has("item") &&
-                                            ingredientObject.get("item").isJsonPrimitive() &&
-                                            ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
+                        // 2. SHAPELESS RECIPES (Checking the "ingredients" array)
+                        if (recipeCopy.has("ingredients") && recipeCopy.get("ingredients").isJsonArray()) {
+                            JsonArray ingredientsArray = recipeCopy.getAsJsonArray("ingredients");
 
-                                        // Replace the "item" definition with the "tag" definition
-                                        ingredientObject.remove("item");
-                                        ingredientObject.addProperty("tag", "minecraft:stone_crafting_materials");
-                                    }
+                            for (int i = 0; i < ingredientsArray.size(); i++) {
+                                boolean isCobblestone = isIsCobblestone(ingredientsArray.get(i));
+
+                                if (isCobblestone) {
+                                    // 1.21.2+ Standard: Overwrite the object in the array with a primitive string
+                                    ingredientsArray.set(i, new com.google.gson.JsonPrimitive("#minecraft:stone_crafting_materials"));
                                 }
                             }
                         }
@@ -213,6 +217,29 @@ public abstract class RecipeManagerMixin {
         }
 
         alreadyGeneratedRecipes = true;
+    }
+
+    private static boolean isIsCobblestone(JsonElement entry) {
+        JsonElement ingredientElement = entry;
+
+        boolean isCobblestone = false;
+
+        if (ingredientElement.isJsonPrimitive() && ingredientElement.getAsJsonPrimitive().isString()) {
+            if (ingredientElement.getAsString().equals("minecraft:cobblestone")) isCobblestone = true;
+            if (ingredientElement.getAsString().equals("#c:cobblestones/normal")) isCobblestone = true;
+        } else if (ingredientElement.isJsonObject()) {
+            JsonObject ingredientObject = ingredientElement.getAsJsonObject();
+            if (ingredientObject.has("item") && ingredientObject.get("item").isJsonPrimitive() && ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
+                isCobblestone = true;
+            } else if (ingredientObject.has("id") && ingredientObject.get("id").isJsonPrimitive() && ingredientObject.get("id").getAsString().equals("minecraft:cobblestone")) {
+                isCobblestone = true;
+            } else if (ingredientObject.has("item") && ingredientObject.get("item").isJsonPrimitive() && ingredientObject.get("item").getAsString().equals("#c:cobblestones/normal")) {
+                isCobblestone = true;
+            } else if (ingredientObject.has("id") && ingredientObject.get("id").isJsonPrimitive() && ingredientObject.get("id").getAsString().equals("#c:cobblestones/normal")) {
+                isCobblestone = true;
+            }
+        }
+        return isCobblestone;
     }
 
     @Unique
@@ -327,7 +354,6 @@ public abstract class RecipeManagerMixin {
 
     @Unique
     private static void extractItemString(JsonElement element, List<String> list) {
-        // 1.21.3 format: Can be a direct string "#minecraft:logs" or "minecraft:iron_ingot"
         if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
             String str = element.getAsString();
             if (str.startsWith("#")) {
@@ -338,12 +364,14 @@ public abstract class RecipeManagerMixin {
             } else {
                 list.add(str);
             }
-        }
-        // Legacy or explicit format {"item": "..."} or {"tag": "..."}
-        else if (element.isJsonObject()) {
+        } else if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
+
+            // 1.21.2+ uses "id", legacy uses "item"
             if (obj.has("item")) {
                 list.add(obj.get("item").getAsString());
+            } else if (obj.has("id")) {
+                list.add(obj.get("id").getAsString());
             } else if (obj.has("tag")) {
                 String tag = obj.get("tag").getAsString();
                 if (itemsInTags.containsKey(tag)) {
