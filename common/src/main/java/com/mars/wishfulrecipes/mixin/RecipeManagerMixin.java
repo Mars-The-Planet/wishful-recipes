@@ -118,7 +118,6 @@ public abstract class RecipeManagerMixin {
                 // use use_stone_crafting_materials tag instead of cobblestone
                 if (use_stone_crafting_materials_enable) {
                     if (use_stone_crafting_materials_list.contains(result)) {
-                        System.out.println("result: " + result + " | recipe: " + recipe);
                         JsonObject recipeCopy = recipe.deepCopy();
 
                         // 1. SHAPED RECIPES (Checking the "key" object)
