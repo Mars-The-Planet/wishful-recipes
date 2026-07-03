@@ -34,7 +34,6 @@ public abstract class RecipeManagerMixin {
 
         // Intercept and parse raw JSON files using listResources
         for (Map.Entry<Identifier, Resource> entry : resourceManager.listResources("recipe", id -> id.getPath().endsWith(".json")).entrySet()) {
-            // Use openAsReader() to get the BufferedReader
             try (Reader reader = entry.getValue().openAsReader()) {
                 loadedRecipes.add(JsonParser.parseReader(reader));
             } catch (Exception ignored) {}
@@ -120,7 +119,6 @@ public abstract class RecipeManagerMixin {
                 // use use_stone_crafting_materials tag instead of cobblestone
                 if (use_stone_crafting_materials_enable) {
                     if (use_stone_crafting_materials_list.contains(result)) {
-                        System.out.println("result: " + result + " | recipe: " + recipe);
                         JsonObject recipeCopy = recipe.deepCopy();
 
                         // 1. SHAPED RECIPES (Checking the "key" object)
@@ -217,29 +215,6 @@ public abstract class RecipeManagerMixin {
         }
 
         alreadyGeneratedRecipes = true;
-    }
-
-    private static boolean isIsCobblestone(JsonElement entry) {
-        JsonElement ingredientElement = entry;
-
-        boolean isCobblestone = false;
-
-        if (ingredientElement.isJsonPrimitive() && ingredientElement.getAsJsonPrimitive().isString()) {
-            if (ingredientElement.getAsString().equals("minecraft:cobblestone")) isCobblestone = true;
-            if (ingredientElement.getAsString().equals("#c:cobblestones/normal")) isCobblestone = true;
-        } else if (ingredientElement.isJsonObject()) {
-            JsonObject ingredientObject = ingredientElement.getAsJsonObject();
-            if (ingredientObject.has("item") && ingredientObject.get("item").isJsonPrimitive() && ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
-                isCobblestone = true;
-            } else if (ingredientObject.has("id") && ingredientObject.get("id").isJsonPrimitive() && ingredientObject.get("id").getAsString().equals("minecraft:cobblestone")) {
-                isCobblestone = true;
-            } else if (ingredientObject.has("item") && ingredientObject.get("item").isJsonPrimitive() && ingredientObject.get("item").getAsString().equals("#c:cobblestones/normal")) {
-                isCobblestone = true;
-            } else if (ingredientObject.has("id") && ingredientObject.get("id").isJsonPrimitive() && ingredientObject.get("id").getAsString().equals("#c:cobblestones/normal")) {
-                isCobblestone = true;
-            }
-        }
-        return isCobblestone;
     }
 
     @Unique
@@ -379,6 +354,29 @@ public abstract class RecipeManagerMixin {
                 }
             }
         }
+    }
+
+    private static boolean isIsCobblestone(JsonElement entry) {
+        JsonElement ingredientElement = entry;
+
+        boolean isCobblestone = false;
+
+        if (ingredientElement.isJsonPrimitive() && ingredientElement.getAsJsonPrimitive().isString()) {
+            if (ingredientElement.getAsString().equals("minecraft:cobblestone")) isCobblestone = true;
+            if (ingredientElement.getAsString().equals("#c:cobblestones/normal")) isCobblestone = true;
+        } else if (ingredientElement.isJsonObject()) {
+            JsonObject ingredientObject = ingredientElement.getAsJsonObject();
+            if (ingredientObject.has("item") && ingredientObject.get("item").isJsonPrimitive() && ingredientObject.get("item").getAsString().equals("minecraft:cobblestone")) {
+                isCobblestone = true;
+            } else if (ingredientObject.has("id") && ingredientObject.get("id").isJsonPrimitive() && ingredientObject.get("id").getAsString().equals("minecraft:cobblestone")) {
+                isCobblestone = true;
+            } else if (ingredientObject.has("item") && ingredientObject.get("item").isJsonPrimitive() && ingredientObject.get("item").getAsString().equals("#c:cobblestones/normal")) {
+                isCobblestone = true;
+            } else if (ingredientObject.has("id") && ingredientObject.get("id").isJsonPrimitive() && ingredientObject.get("id").getAsString().equals("#c:cobblestones/normal")) {
+                isCobblestone = true;
+            }
+        }
+        return isCobblestone;
     }
 
     // if rightAmount set to 0 it doesnt check for it
