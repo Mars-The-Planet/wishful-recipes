@@ -13,7 +13,7 @@ Wishful recipes is a fully configurable server-side mod. Adding a bunch of recip
 <h3><img src="https://media.forgecdn.net/attachments/1849/962/tiledynamicrecipes-webp.webp" alt="DYNAMIC RECIPES"/></h3>
 <img src="https://media.forgecdn.net/attachments/1849/971/craftingtoblock3-webp.webp" alt="Automatically generates shapeless recipes that convert 2 slabs of the same type into their full block variant."/>
 <img src="https://media.forgecdn.net/attachments/1849/970/betterstairscrafting-webp.webp" alt="Adds 2x2 stair recipes usable directly from your inventory. The output matches the stonecutter’s yield."/>
-<img src="https://media.forgecdn.net/attachments/1849/972/stairstoblocks-webp.webp" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/>
+<p><img src="https://media.forgecdn.net/attachments/1849/972/stairstoblocks-webp.webp" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/><img src="https://media.forgecdn.net/attachments/1862/282/alternativestairstoblocks5-ezgif-com-webp-to-png.png" alt="Automatically generates shapeless recipes that convert stairs into their full block variants."/></p>
 <img src="https://media.forgecdn.net/attachments/1849/973/wallstoblocks-webp.webp" alt="Automatically generates shapeless recipes that convert walls into their full block variants."/>
 <img src="https://media.forgecdn.net/attachments/1849/969/blastingraw-webp.webp" alt="Automatically generates blasting recipes for full blocks of raw metals. (Optionally also smelting recipes)"/>
 <img src="https://media.forgecdn.net/attachments/1849/996/blastingstone-webp.webp" alt="Adds blasting recipes for all stonecutter-compatible blocks that can be smelted."/>
