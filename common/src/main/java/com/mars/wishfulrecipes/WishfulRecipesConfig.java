@@ -9,6 +9,9 @@ public class WishfulRecipesConfig extends DeimosConfig {
     @Entry public static boolean stairs_to_blocks_enable = true;
     @Entry public static int stairs_to_blocks_amount = 1;
 
+    @Entry public static boolean alternative_stairs_to_blocks_enable = false;
+    @Entry public static int alternative_stairs_to_blocks_amount = 4;
+
     @Entry public static boolean better_stairs_crafting_enable = true;
     @Entry public static int better_stairs_crafting_amount = 3;
 
