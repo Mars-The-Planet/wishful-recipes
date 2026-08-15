@@ -77,6 +77,7 @@ public abstract class RecipeManagerMixin {
                     for (String key : keys) {
                         if (key == null) continue;
 
+                        // better stairs crafting
                         if (better_stairs_crafting_enable) {
                             DeimosRecipeGenerator.createShapedRecipeJson(
                                     Lists.newArrayList(key),
@@ -86,7 +87,12 @@ public abstract class RecipeManagerMixin {
                             );
                         }
 
-                        if (stairs_to_blocks_enable) DeimosRecipeGenerator.createItemConvertorJson(result, key, stairs_to_blocks_amount);
+
+                        if (stairs_to_blocks_enable)
+                            DeimosRecipeGenerator.createItemConvertorJson(result, key, stairs_to_blocks_amount);
+                        // alternative stairs to blocks
+                        if (alternative_stairs_to_blocks_enable)
+                            DeimosRecipeGenerator.createShapedRecipeJson(Lists.newArrayList(result), Lists.newArrayList("##", "##"), key, alternative_stairs_to_blocks_amount);
                     }
                 }
 
