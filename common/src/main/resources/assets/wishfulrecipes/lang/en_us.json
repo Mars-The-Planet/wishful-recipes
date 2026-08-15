@@ -1,14 +1,17 @@
 {
   "wishfulrecipes.deimosconfig.title": "Wishful Recipes Config",
 
-  "wishfulrecipes.deimosconfig.stairs_to_blocks_enable": "Slabs to blocks enable",
-  "wishfulrecipes.deimosconfig.stairs_to_blocks_amount": "Amount of block you get back from slabs",
+  "wishfulrecipes.deimosconfig.stairs_to_blocks_enable": "Stairs to blocks enable",
+  "wishfulrecipes.deimosconfig.stairs_to_blocks_amount": "Amount of block you get back from stairs",
+
+  "wishfulrecipes.deimosconfig.alternative_stairs_to_blocks_enable": "Enable alternative stairs to blocks recipe",
+  "wishfulrecipes.deimosconfig.alternative_stairs_to_blocks_amount": "Amount of block you get back from alternative stairs to blocks recipe",
 
   "wishfulrecipes.deimosconfig.better_stairs_crafting_enable": "Better stairs recipe enable",
   "wishfulrecipes.deimosconfig.better_stairs_crafting_amount": "Amount of stairs you get from better stairs recipe",
 
-  "wishfulrecipes.deimosconfig.slabs_to_blocks_enable": "Stairs to blocks enable",
-  "wishfulrecipes.deimosconfig.slabs_to_blocks_amount": "Amount of block you get back from stairs",
+  "wishfulrecipes.deimosconfig.slabs_to_blocks_enable": "Slabs to blocks enable",
+  "wishfulrecipes.deimosconfig.slabs_to_blocks_amount": "Amount of block you get back from slabs",
 
   "wishfulrecipes.deimosconfig.walls_to_blocks_enable": "Walls to blocks enable",
   "wishfulrecipes.deimosconfig.walls_to_blocks_amount": "Amount of block you get back from walls",
