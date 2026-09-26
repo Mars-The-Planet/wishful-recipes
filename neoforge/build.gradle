@@ -3,6 +3,15 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+repositories {
+    mavenLocal {
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
+    }
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -35,6 +44,7 @@ neoForge {
 
 dependencies {
     implementation "maven.modrinth:deimos:${project.minecraft_version}-neoforge-${project.deimos_version}"
+    //implementation "com.mars.deimos:deimos-${project.minecraft_version}-neoforge:${project.deimos_version}"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

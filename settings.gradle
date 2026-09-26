@@ -2,6 +2,12 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
+        mavenLocal {
+            metadataSources {
+                mavenPom()
+                artifact()
+            }
+        }
         exclusiveContent {
             forRepository {
                 maven {

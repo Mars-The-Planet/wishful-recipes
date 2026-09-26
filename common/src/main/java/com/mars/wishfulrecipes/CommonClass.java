@@ -1,17 +1,20 @@
 package com.mars.wishfulrecipes;
 
+import com.google.gson.JsonElement;
 import com.mars.deimos.config.DeimosConfig;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
+import net.minecraft.world.item.crafting.Recipe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mars.wishfulrecipes.Constants.LOG;
 import static com.mars.wishfulrecipes.WishfulRecipesConfig.*;
 
 public class CommonClass {
     public static Map<String, List<String>> itemsInTags = new HashMap<>();
-    //public static Boolean alreadyGeneratedRecipes = false;
 
     public static void init() {
         DeimosConfig.init(Constants.MOD_ID, WishfulRecipesConfig.class);
@@ -48,6 +51,17 @@ public class CommonClass {
                 DeimosRecipeGenerator.createItemConvertorJson(unpackingSet[0], unpackingSet[1], Integer.parseInt(unpackingSet[2]));
             }
         }
+
+        DeimosRecipeGenerator.registerProvider((existing, ops) -> {
+            List<JsonElement> loadedRecipes = new ArrayList<>();
+            existing.listElements().forEach(ref ->
+                    Recipe.DIRECT_CODEC.encodeStart(ops, (Recipe) ref.value())
+                            .ifSuccess(loadedRecipes::add)
+                            .ifError(err -> LOG.error("[WishfulRecipes] Failed to encode recipe {}: {}",
+                                    ref.key().identifier(), err.message())));
+
+            WishfulRecipeGeneration.generate(loadedRecipes);
+        });
 
         // Backported Recipes
         // 26.1 becomes official

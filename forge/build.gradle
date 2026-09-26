@@ -49,6 +49,7 @@ repositories {
     maven fg.forgeMaven
     maven fg.minecraftLibsMaven
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -58,6 +59,7 @@ dependencies {
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
 
     implementation "maven.modrinth:deimos:${project.minecraft_version}-forge-${project.deimos_version}"
+    //implementation "com.mars.deimos:deimos-${project.minecraft_version}-forge:${project.deimos_version}"
 }
 
 jarJar.register() {

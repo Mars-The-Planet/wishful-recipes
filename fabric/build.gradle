@@ -4,6 +4,12 @@ plugins {
 }
 
 repositories {
+    mavenLocal {
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
+    }
     maven {
         name = "Terraformers"
         url = "https://maven.terraformersmc.com/"
@@ -17,6 +23,7 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     implementation "maven.modrinth:deimos:${project.minecraft_version}-fabric-${project.deimos_version}"
+    //implementation "com.mars.deimos:deimos-${project.minecraft_version}-fabric:${project.deimos_version}"
     compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
