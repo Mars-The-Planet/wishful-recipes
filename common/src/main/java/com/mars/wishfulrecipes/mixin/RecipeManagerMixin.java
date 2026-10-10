@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -222,6 +223,12 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
+    private static boolean itemExists(String id) {
+        Identifier identifier = id == null ? null : Identifier.tryParse(id);
+        return identifier != null && BuiltInRegistries.ITEM.containsKey(identifier);
+    }
+
+    @Unique
     private static String getType(JsonObject recipe) {
         if (!recipe.has("type")) return null;
 
@@ -248,14 +255,16 @@ public abstract class RecipeManagerMixin {
 
         // 1.21.3 format: Result can be just a primitive string e.g. "minecraft:iron_block"
         if (resultElement.isJsonPrimitive() && resultElement.getAsJsonPrimitive().isString()) {
-            return resultElement.getAsString();
+            String result = resultElement.getAsString();
+            if (itemExists(result)) return result;
         }
 
         // Fallback for object format e.g. {"id": "minecraft:iron_block", "count": 1}
         if (resultElement.isJsonObject()) {
             JsonObject resultObject = resultElement.getAsJsonObject();
             if (resultObject.has("id")) {
-                return resultObject.get("id").getAsString();
+                String result = resultObject.get("id").getAsString();
+                if (itemExists(result)) return result;
             }
         }
 
@@ -338,9 +347,14 @@ public abstract class RecipeManagerMixin {
             if (str.startsWith("#")) {
                 String tag = str.substring(1);
                 if (itemsInTags.containsKey(tag)) {
-                    list.addAll(itemsInTags.get(tag));
+                    List<String> items = itemsInTags.get(tag);
+                    for (String item : items) {
+                        if (itemExists(item)) {
+                            list.add(item);
+                        }
+                    }
                 }
-            } else {
+            } else if (itemExists(str)){
                 list.add(str);
             }
         } else if (element.isJsonObject()) {
@@ -348,13 +362,20 @@ public abstract class RecipeManagerMixin {
 
             // 1.21.2+ uses "id", legacy uses "item"
             if (obj.has("item")) {
-                list.add(obj.get("item").getAsString());
+                String item = obj.get("item").getAsString();
+                if (itemExists(item))   list.add(item);
             } else if (obj.has("id")) {
-                list.add(obj.get("id").getAsString());
+                String item = obj.get("id").getAsString();
+                if (itemExists(item))   list.add(item);
             } else if (obj.has("tag")) {
                 String tag = obj.get("tag").getAsString();
                 if (itemsInTags.containsKey(tag)) {
-                    list.addAll(itemsInTags.get(tag));
+                    List<String> items = itemsInTags.get(tag);
+                    for (String item : items) {
+                        if (itemExists(item)) {
+                            list.add(item);
+                        }
+                    }
                 }
             }
         }
