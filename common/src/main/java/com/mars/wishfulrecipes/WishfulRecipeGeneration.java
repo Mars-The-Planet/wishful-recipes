@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -18,6 +20,13 @@ public final class WishfulRecipeGeneration {
     private WishfulRecipeGeneration() {}
 
     public static void generate(List<JsonElement> loadedRecipes) {
+        // Key - Raw Metal Item
+        // 0 - Raw Metal Item
+        // 1 - Metal Item
+        // 2 - Raw Metal Block
+        // 3 - Metal Block
+        // 4 - exp
+        // "" - missing
         Map<String, String[]> isRawMetal = new HashMap<>();
         Set<String> isStone = new HashSet<>();
 
@@ -165,7 +174,11 @@ public final class WishfulRecipeGeneration {
         }
     }
 
-    @Unique
+    private static boolean itemExists(String id) {
+        Identifier identifier = id == null ? null : Identifier.tryParse(id);
+        return identifier != null && BuiltInRegistries.ITEM.containsKey(identifier);
+    }
+
     private static String getSafeString(JsonElement element) {
         if (element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
             return element.getAsString();
@@ -173,13 +186,11 @@ public final class WishfulRecipeGeneration {
         return null;
     }
 
-    @Unique
     private static String getType(JsonObject recipe) {
         if (!recipe.has("type")) return null;
         return getSafeString(recipe.get("type"));
     }
 
-    @Unique
     private static float getExp(JsonObject recipe) {
         if (!recipe.has("experience")) return 0;
         JsonElement expElement = recipe.get("experience");
@@ -187,28 +198,28 @@ public final class WishfulRecipeGeneration {
         return expElement.getAsFloat();
     }
 
-    @Unique
     private static String getResult(JsonObject recipe) {
         if (!recipe.has("result")) return null;
         JsonElement resultElement = recipe.get("result");
 
         // Primitive string format (e.g. "minecraft:iron_block")
         String safeStr = getSafeString(resultElement);
-        if (safeStr != null) return safeStr;
+        if (safeStr != null && itemExists(safeStr)) return safeStr;
 
         // Object format (e.g. {"id": "minecraft:iron_block", "count": 1})
         if (resultElement.isJsonObject()) {
             JsonObject resultObject = resultElement.getAsJsonObject();
             if (resultObject.has("id")) {
-                return getSafeString(resultObject.get("id"));
+                String item = getSafeString(resultObject.get("id"));
+                if (itemExists(item)) return item;
             } else if (resultObject.has("item")) {
-                return getSafeString(resultObject.get("item"));
+                String item = getSafeString(resultObject.get("item"));
+                if (itemExists(item)) return item;
             }
         }
         return null;
     }
 
-    @Unique
     private static int getCount(JsonObject recipe) {
         if (!recipe.has("result")) return 0;
         JsonElement resultElement = recipe.get("result");
@@ -230,7 +241,6 @@ public final class WishfulRecipeGeneration {
         return 0;
     }
 
-    @Unique
     private static String[] getIngredients(JsonObject recipe) {
         List<String> ingredientsList = new ArrayList<>();
 
@@ -259,7 +269,6 @@ public final class WishfulRecipeGeneration {
         return ingredientsList.toArray(new String[0]);
     }
 
-    @Unique
     private static String[] getKeys(JsonObject recipe) {
         List<String> items = new ArrayList<>();
 
@@ -285,7 +294,6 @@ public final class WishfulRecipeGeneration {
         return items.toArray(new String[0]);
     }
 
-    @Unique
     private static void extractItemString(JsonElement element, List<String> list) {
         String safeStr = getSafeString(element);
 
@@ -293,7 +301,12 @@ public final class WishfulRecipeGeneration {
             if (safeStr.startsWith("#")) {
                 String tag = safeStr.substring(1);
                 if (itemsInTags != null && itemsInTags.containsKey(tag)) {
-                    list.addAll(itemsInTags.get(tag));
+                    List<String> items = itemsInTags.get(tag);
+                    for (String item : items) {
+                        if (itemExists(item)) {
+                            list.add(item);
+                        }
+                    }
                 }
             } else {
                 list.add(safeStr);
@@ -304,20 +317,24 @@ public final class WishfulRecipeGeneration {
             // Extract safely using the new helper
             if (obj.has("item")) {
                 String item = getSafeString(obj.get("item"));
-                if (item != null) list.add(item);
+                if (item != null && itemExists(item)) list.add(item);
             } else if (obj.has("id")) {
                 String id = getSafeString(obj.get("id"));
-                if (id != null) list.add(id);
+                if (id != null && itemExists(id)) list.add(id);
             } else if (obj.has("tag")) {
                 String tag = getSafeString(obj.get("tag"));
                 if (tag != null && itemsInTags != null && itemsInTags.containsKey(tag)) {
-                    list.addAll(itemsInTags.get(tag));
+                    List<String> items = itemsInTags.get(tag);
+                    for (String item : items) {
+                        if (itemExists(item)) {
+                            list.add(item);
+                        }
+                    }
                 }
             }
         }
     }
 
-    @Unique
     private static boolean isIsCobblestone(JsonElement entry) {
         if (entry == null) return false;
 
@@ -342,7 +359,6 @@ public final class WishfulRecipeGeneration {
     }
 
     // if rightAmount set to 0 it doesnt check for it
-    @Unique
     private static String[] basePatternCheck(JsonObject recipe, int rightAmount, int rightPatternArraySize) {
         if (!"minecraft:crafting_shaped".equals(getType(recipe))) return null;
 
@@ -370,7 +386,6 @@ public final class WishfulRecipeGeneration {
         return rows;
     }
 
-    @Unique
     private static boolean hasWallPattern(JsonObject recipe) {
         String[] rows = basePatternCheck(recipe, 6, 2);
         if (rows == null) return false;
@@ -382,7 +397,6 @@ public final class WishfulRecipeGeneration {
         return rows[0].equals(expectedLine) && rows[1].equals(expectedLine);
     }
 
-    @Unique
     private static boolean hasFullBlockPattern(JsonObject recipe) {
         String[] rows = basePatternCheck(recipe, 1, 3);
         if (rows == null) return false;
@@ -394,7 +408,6 @@ public final class WishfulRecipeGeneration {
         return rows[0].equals(expectedLine) && rows[1].equals(expectedLine) && rows[2].equals(expectedLine);
     }
 
-    @Unique
     private static boolean isMekanismRawBlockPattern(JsonObject recipe) {
         String result = getResult(recipe);
         if (result == null || !result.contains("block")) return false;
@@ -409,7 +422,6 @@ public final class WishfulRecipeGeneration {
         return rows[0].equals(expected) && rows[1].charAt(0) == c && rows[2].charAt(0) == c && rows[2].equals(expected);
     }
 
-    @Unique
     private static boolean hasSlabPattern(JsonObject recipe) {
         String[] rows = basePatternCheck(recipe, 6, 1);
         if (rows == null) return false;
@@ -421,7 +433,6 @@ public final class WishfulRecipeGeneration {
         return rows[0].equals(expected);
     }
 
-    @Unique
     private static boolean hasStairsPattern(JsonObject recipe) {
         String[] rows = basePatternCheck(recipe, 0, 3);
         if (rows == null) return false;
