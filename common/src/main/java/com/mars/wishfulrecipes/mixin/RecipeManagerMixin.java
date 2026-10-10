@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mars.deimos.datagen.DeimosRecipeGenerator;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -203,6 +204,12 @@ public abstract class RecipeManagerMixin {
     }
 
     @Unique
+    private static boolean itemExists(String id) {
+        ResourceLocation resourceLocation = id == null ? null : ResourceLocation.tryParse(id);
+        return resourceLocation != null && Registry.ITEM.containsKey(resourceLocation);
+    }
+
+    @Unique
     private static String getType(JsonObject recipe) {
         if (!recipe.has("type")) return null;
 
@@ -242,7 +249,10 @@ public abstract class RecipeManagerMixin {
         JsonElement itemElement = resultObject.get("item");
         if (!itemElement.isJsonPrimitive() || !((JsonPrimitive) itemElement).isString()) return null;
 
-        return itemElement.getAsString();
+        String result = itemElement.getAsString();
+        if (!itemExists(result)) return null;
+
+        return result;
     }
 
     @Unique
@@ -289,13 +299,21 @@ public abstract class RecipeManagerMixin {
                 if (ingredientElement.isJsonObject()) {
                     JsonObject ingObj = ingredientElement.getAsJsonObject();
                     if (ingObj.has("item")) {
-                        ingredientsList.add(ingObj.get("item").getAsString());
+                        String ingredient = ingObj.get("item").getAsString();
+                        if (!itemExists(ingredient)) {
+                            ingredientsList.add(ingredient);
+                        }
                     }
                     if (ingObj.has("tag")) {
                         String tagName = ingObj.get("tag").getAsString();
                         List<String> items = itemsInTags.get(tagName);
-                        if (items != null)
-                            ingredientsList.addAll(items);
+                        if (items != null) {
+                            for (String ingredient : items) {
+                                if (itemExists(ingredient)) {
+                                    ingredientsList.add(ingredient);
+                                }
+                            }
+                        }
                     }
                 }
                 // CASE 2: Ingredient is an Array (e.g., [{"item":...}, {"item":...}])
@@ -305,7 +323,10 @@ public abstract class RecipeManagerMixin {
                         if (ingItem.isJsonObject()) {
                             JsonObject ingObj = ingItem.getAsJsonObject();
                             if (ingObj.has("item")) {
-                                ingredientsList.add(ingObj.get("item").getAsString());
+                                String ingredient = ingObj.get("item").getAsString();
+                                if (!itemExists(ingredient)) {
+                                    ingredientsList.add(ingredient);
+                                }
                             }
                         }
                     }
@@ -362,10 +383,18 @@ public abstract class RecipeManagerMixin {
         JsonObject obj = recipe.getAsJsonObject();
 
         if (obj.has("item")) {
-            list.add(obj.get("item").getAsString());
+            String item = obj.get("item").getAsString();
+            if (itemExists(item)){
+                list.add(item);
+            }
         }
         else if (obj.has("tag") && itemsInTags.containsKey(obj.get("tag").getAsString())) {
-            list.addAll(itemsInTags.get(obj.get("tag").getAsString()));
+            List<String> items = itemsInTags.get(obj.get("tag").getAsString());
+            for (String item : items) {
+                if (itemExists(item)) {
+                    list.add(item);
+                }
+            }
         }
     }
 
