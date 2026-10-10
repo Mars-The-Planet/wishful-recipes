@@ -300,7 +300,7 @@ public abstract class RecipeManagerMixin {
                     JsonObject ingObj = ingredientElement.getAsJsonObject();
                     if (ingObj.has("item")) {
                         String ingredient = ingObj.get("item").getAsString();
-                        if (!itemExists(ingredient)) {
+                        if (itemExists(ingredient)) {
                             ingredientsList.add(ingredient);
                         }
                     }
@@ -324,7 +324,7 @@ public abstract class RecipeManagerMixin {
                             JsonObject ingObj = ingItem.getAsJsonObject();
                             if (ingObj.has("item")) {
                                 String ingredient = ingObj.get("item").getAsString();
-                                if (!itemExists(ingredient)) {
+                                if (itemExists(ingredient)) {
                                     ingredientsList.add(ingredient);
                                 }
                             }
