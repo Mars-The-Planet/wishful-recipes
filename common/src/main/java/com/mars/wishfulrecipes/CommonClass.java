@@ -19,40 +19,40 @@ public class CommonClass {
     public static void init() {
         DeimosConfig.init(Constants.MOD_ID, WishfulRecipesConfig.class);
 
-        if (blast_to_glass_enable) {
-            // #minecraft:smelts_to_glass - works down to 1.19.4
-            DeimosRecipeGenerator.createBlastingJson("#minecraft:smelts_to_glass", "glass", 100, 0.1F);
-        }
-
-        if (extra_blasting_enable) {
-            for(String blastingRecipe : extra_blasting_list){
-                String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
-                DeimosRecipeGenerator.createBlastingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
-            }
-        }
-
-        if (extra_smoking_enable) {
-            for(String blastingRecipe : extra_smoking_list){
-                String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
-                DeimosRecipeGenerator.createSmokingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
-            }
-        }
-
-        if (extra_smelting_enable) {
-            for(String blastingRecipe : extra_smelting_list){
-                String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
-                DeimosRecipeGenerator.createSmeltingJson(rawMetalSet[0], rawMetalSet[1], 200, Float.parseFloat(rawMetalSet[2]));
-            }
-        }
-
-        if (unpacking_enable) {
-            for (String unpackingRecipe : unpacking_list) {
-                String[] unpackingSet =  (unpackingRecipe.replaceAll("\\s","")).split(",");
-                DeimosRecipeGenerator.createItemConvertorJson(unpackingSet[0], unpackingSet[1], Integer.parseInt(unpackingSet[2]));
-            }
-        }
-
         DeimosRecipeGenerator.registerProvider((existing, ops) -> {
+            if (blast_to_glass_enable) {
+                // #minecraft:smelts_to_glass - works down to 1.19.4
+                DeimosRecipeGenerator.createBlastingJson("#minecraft:smelts_to_glass", "glass", 100, 0.1F);
+            }
+
+            if (extra_blasting_enable) {
+                for(String blastingRecipe : extra_blasting_list){
+                    String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
+                    DeimosRecipeGenerator.createBlastingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
+                }
+            }
+
+            if (extra_smoking_enable) {
+                for(String blastingRecipe : extra_smoking_list){
+                    String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
+                    DeimosRecipeGenerator.createSmokingJson(rawMetalSet[0], rawMetalSet[1], 100, Float.parseFloat(rawMetalSet[2]));
+                }
+            }
+
+            if (extra_smelting_enable) {
+                for(String blastingRecipe : extra_smelting_list){
+                    String[] rawMetalSet =  (blastingRecipe.replaceAll("\\s","")).split(",");
+                    DeimosRecipeGenerator.createSmeltingJson(rawMetalSet[0], rawMetalSet[1], 200, Float.parseFloat(rawMetalSet[2]));
+                }
+            }
+
+            if (unpacking_enable) {
+                for (String unpackingRecipe : unpacking_list) {
+                    String[] unpackingSet =  (unpackingRecipe.replaceAll("\\s","")).split(",");
+                    DeimosRecipeGenerator.createItemConvertorJson(unpackingSet[0], unpackingSet[1], Integer.parseInt(unpackingSet[2]));
+                }
+            }
+
             List<JsonElement> loadedRecipes = new ArrayList<>();
             existing.listElements().forEach(ref ->
                     Recipe.DIRECT_CODEC.encodeStart(ops, (Recipe) ref.value())
